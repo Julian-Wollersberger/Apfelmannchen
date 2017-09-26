@@ -1,55 +1,95 @@
 package at.htlwels.bhit.wollersbergerjulian.Apfelmaenchen.rechnen;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import at.htlwels.bhit.wollersbergerjulian.Apfelmaenchen.model.PunktListe;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+// Created by julian on 27.06.17.
 /**
- * Created by julian on 30.03.17.
+ * In dieser Klasse befindet sich der mathematische Algorithmus für die
+ * Berechnung der Mandelbrot-Menge.
  */
-@Deprecated
 public class Berechnung {
+    // Die Distanz vom Ursprung (0+0i), ab der ein Punkt als gegen undendlich gehend gilt.
+    public static final int STANDARD_MAX_DISTANZ = 10;
 
-    private int maxIterationen;
-
-    // In welchem Bereich die c-Punkte liegen
-    private double minR;
-    private double maxR;
-    private double minI;
-    private double maxI;
-
-    public Berechnung(double minR, double maxR, double minI, double maxI, int maxIterationen) {
-        this.minR = minR;
-        this.maxR = maxR;
-        this.minI = minI;
-        this.maxI = maxI;
-        this.maxIterationen = maxIterationen;
-    }
-    public Berechnung() {
-        this.minR = -2;
-        this.maxR = 1;
-        this.minI = -1;
-        this.maxI = 1;
-        this.maxIterationen = 100;
+    public static void fülleSpaltenQueue(double minR, double deltaR, int anzahlSpalten, BlockingQueue<Double> spaltenQueue) {
+        // Diese Spalten sollen ausgerechne werden.
+        double tempR;
+        for (int i = 0; i < anzahlSpalten; i++) {
+            // Statt += erhöht Genauigkeit.
+            tempR = minR + (i*deltaR);
+            spaltenQueue.add(tempR);
+        }
     }
 
-
-    /** Testet solange, bis feststeht, ob es in oder außerhalb der Menge ist.
-     *
-     * Abbruchbedingungen:
-     * 1000 Iterationen oder
-     * zr + zi > 2 (Mehr als 2 vom Ursprung weg in Diamantform)
-     *
-     * @return Die Anzahl Iterationen, die er gebraucht hat. */
-    public int istInMenge(double cr, double ci)
+    /**TODO beschreiben, wie die parallelisierung gemacht wird. */
+    public static void berechnePunkte(double minI, double maxI, double deltaI, int maxIterationen, BlockingQueue<Double> columsQueue, BlockingQueue<PunktListe> punkteQueue)
+            throws InterruptedException
     {
-        /* z(1) */
+        int iterationen;
+        Double CR;
+        PunktListe spalte;
+        // Das +2 wird anscheinend wegen Rundungsfehler gebraucht.
+        int anzahlPunkte = (int) ((maxI-minI)/deltaI) +2;
+
+        // Haupt-Schleife. Für alle Spalten.
+        while ((CR = columsQueue.poll()) != null) {
+            spalte = new PunktListe(anzahlPunkte);
+
+            //Für alle Punkte in der Spalte
+            int j = 0;
+            for (double ci = minI; ci < maxI; ci=minI+ j*deltaI) {
+                //Das ist die ganze Rechen-Zauberei.
+                iterationen = istInMenge(CR, ci, maxIterationen, STANDARD_MAX_DISTANZ);
+                spalte.add(CR,ci,iterationen);
+                j++;
+            }
+
+            // Berechnete Liste von Punkten in die Queue geben.
+            // If it was not successfull (time ran out)
+            if (!punkteQueue.offer(spalte, 1, TimeUnit.SECONDS))
+                System.out.println(Thread.currentThread() +" schaffte es nicht rechzeitig, " +
+                        "die Ergebnisse in die Liste zu geben. ");
+        }
+    }
+
+    /**Diese Iteration ist das <b>Herzstück der Mandelbrotmenge</b>.
+     * Für einen komplexen Punkt c wird ermittelt, ob diese Folge
+     * gegen unendlich oder gegen 0 geht:
+     * <code>
+     * <br>     z(0) = c
+     * <br>     z(n) = (z(n-1))² + c
+     * </code>
+     * <br><br>
+     * Da ein Computer nicht unendlich viel Rechenleistung hat, kann nicht exakt
+     * ermittelt werden, ob ein Punkt wirklich gegen 0 oder unendlich geht.
+     * <br>Deshalb wird ein Näherungsverfahren eingesetzt:
+     * <br>Sobald der Betrag (Distanz; |z|) nach vielen Iterationen 2 (?) überschreitet, kann es nicht mehr gegen
+     * 0 gehen. Aber genau am Rand braucht es unendlich viele Iterationen, bis man entscheiden kann. Deshalb
+     * wird eine maximale Anzahl an Iterationen verwendet; wenn es nach maxIterationen nicht klar ist, dann wird
+     * angenommen, die Folge geht gegen 0.
+     *
+     * @param cr Realteil des Anfangspunktes
+     * @param ci Imaginärteil des Anfangspunktes
+     * @param maxIter Anzahl Iterationen, bis angenommen wird, die Folge geht gegen 0.
+     *                Je höher, desto genauer an den Rändern.
+     * @param maxDistanz Betrag von z, ab dem die Folge gegen unendlich geht. Muss mindestens
+     *                   2 sein; höhere Werte liefern genauere Farben weit außen.
+     * @return Anzahl Iterationen, bis die Folge maxDistanz überschritten hat.
+     *         Daraus wird die Farbe errechnet.
+     */
+    public static int istInMenge(double cr, double ci, int maxIter, double maxDistanz) {
         double zr = cr;
         double zi = ci;
         double zrtemp;
         int i;
+        // Distanz wird mit Pythagoras berechnet: dist² = zr² + zi²
+        // Da Wurzel berechnen langsam ist, wird stattdessen Vergleichswert quadriert.
+        maxDistanz = maxDistanz*maxDistanz;
 
-        for (i = 0; i < maxIterationen && zr+zi <2; i++) {
+        for (i = 0; i < maxIter && zr*zr+zi*zi < maxDistanz; i++) {
             zrtemp =  zr*zr - zi*zi +cr;
             zi = 2*zr*zi + ci;
             zr = zrtemp;
@@ -57,50 +97,14 @@ public class Berechnung {
 
         return i;
     }
-
-    public double berechneHöhe(int breite)
-    {
-        return breite * (maxI - minI)/(maxR - minR);
-    }
-
-    public void zeichne(Canvas canvas)
-    {
-        // Canvas vorbereiten
-        final GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
-
-        //Die Größe in Pixel
-        double breite = canvas.getBoundsInLocal().getWidth();
-        double höhe = canvas.getBoundsInLocal().getHeight();
-
-        // Wie viel ein Pixel entspricht.
-        double pixelR = (maxR - minR) / breite;
-        double pixelI = (maxI - minI) / höhe;
-
-        // Die fortlaufenden Punkte
-        double cr = minR;
-        double ci = minI;
-        double color;
-
-        System.out.println(breite +" "+ höhe);
-        System.out.println(pixelR +" "+ pixelI);
-
-        // Die Haupt-Schleife
-        for (int i = 0; i < breite; i++) {
-            System.out.println(i);
-            for (int j = 0; j < höhe; j++) {
-
-                ci += pixelI;
-
-                color = istInMenge(cr, ci);
-                if(color==maxIterationen) color = 0.0;
-
-                gc.setStroke(new Color(color/maxIterationen, 0, 0,1));
-                gc.strokeLine(i, j, i, j);
-
-            }
-            cr += pixelR;
-            ci = minI;
-        }
-    }
 }
+
+/*
+* Dies ist die Formel für z³+c statt z²+c.
+* Erzeugt ein anderes schönes Muster.
+* https://youtu.be/qhbuKbxJsk8?t=5m52s
+*
+* zrtemp = zr*zr*zr - 3*zr*zi*zi +cr;
+*  zi = 3*zr*zr*zi - zi*zi*zi +ci;
+*  zr = zrtemp;
+* */

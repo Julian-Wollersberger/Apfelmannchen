@@ -1,0 +1,39 @@
+--- Zoomen ---
+* Drag&Drop?
+
+--- Stellenweise genauer berechnen ---
+* Dort, wo man dem Rand näher ist, mit mehr Iterationen arbeiten.
+* Dazu Canvas rekursiv aufteilen:
+  Zuerst vier (neun?), für jedes den Mittelpunkt bestimmen, wie schnell dieser divergiert,
+  dann diese weiter aufteilen. Je nach dem entscheiden, wie viele Iterationen verwendet werden.
+* Aufhören, wenn?
+* Wenn es ein Grenzstück ist, dann mehr Iterationen.
+  Also mindestens ein Stück divergiert und mindestens eins konvergiert.
+  
+
+--- Abspeichern ---
+Entweder die PunktSpalten mit ObjectStream speichern,
+Oder wenn ich den iterativen Ansatz mache, und bei Zoomen:
+* Punkte als Bild/Bitmap erzeugen und abspeichern mit
+  zusätzlichen Eigenschaften wie komplexe Position und Größe,
+  Um es wieder richtig einfügen zu können.
+* Bei Zoomen sehr prakisch. -> Wie Google Earth nachladen :)
+* Als GIF um Platz zu sparen?
+
+
+--- Debug-Fenster ---
+Mehrere Tabs:
+* Konsolen-Ausgaben, in Kategorien aufgespaltet. Mit Map?
+  Einzeln aktivier- und deaktivierbar.
+  logger.log("thread", "Thread gestartet!")
+* Iterationen: Für den Punkt, auf den die Maus zeigt, werden die Werte
+  der Punke in jedem Iterationsschritt angezeigt (cr, ci, iterationen, Resultierende Farbe)
+
+
+--- Andere Muster ---
+Was ich hier gemacht habe, ist ein wunderschönes Framework für Fraktale generell!
+Durch Austausch der Berechnungs-Klasse können leicht andere Fraktale generiert
+und angezeigt werden. Z.B:
+* Allgemeine Mandelbrotmenge z^n +c
+* Fraktale mit Linien? Sierpinski-Dreieck, ...
+  

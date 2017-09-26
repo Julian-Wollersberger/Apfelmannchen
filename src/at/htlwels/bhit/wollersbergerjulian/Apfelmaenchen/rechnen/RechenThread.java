@@ -1,85 +1,52 @@
 package at.htlwels.bhit.wollersbergerjulian.Apfelmaenchen.rechnen;
 
+import at.htlwels.bhit.wollersbergerjulian.Apfelmaenchen.model.PunktListe;
+
 import java.util.concurrent.BlockingQueue;
 
+// Created by julian on 24.05.17.
 /**
- * Created by julian on 24.05.17.
+ * Die Berechnung der Punkte wird auf Threads aufgeteilt, denn diese
+ * Aufgabe ist wunderschön parallelisierbar.
  *
- * Der Thread blockiert, wenn die Queue voll ist.
+ * <br><br> Hier wird nur
+ * {@link Berechnung#berechnePunkte(double, double, double, int, BlockingQueue, BlockingQueue) berechnePunkte}
+ * aufgerufen.
  */
 public class RechenThread extends Thread {
 
     /* Der Bereich, in dem die komlexen Werte sind. */
-    private double minR;
-    private double maxR;
     private double minI;
     private double maxI;
-
     /* Wie viel ein Pixel in komplexen Werten entspricht. */
-    private double deltaR;
     private double deltaI;
-
     private int maxIterationen;
 
-    private BlockingQueue<Punkt> queue;
+    /* Die Queue soll nun nur dafür verwendet werden, dass
+       die Threads die Spalten bekommen, die sie berechnen sollen.*/
+    private BlockingQueue<Double> columsQueue;
+    /* Eine Queue, in der die Ergebnisse kommen. */
+    private BlockingQueue<PunktListe> punkteQueue;
 
-    public RechenThread(double minR, double maxR, double minI, double maxI,
-                        double deltaR, double deltaI, int maxIterationen,
-                        BlockingQueue<Punkt> queue) {
-        this.minR = minR;
-        this.maxR = maxR;
+    /**@param columsQueue eine Liste der r-Werte, die die Spalten representieren, die ein Thread berechnen soll.*/
+    public RechenThread(double minI, double maxI, double deltaI, int maxIterationen,
+                        BlockingQueue<Double> columsQueue, BlockingQueue<PunktListe> punkteQueue) {
         this.minI = minI;
         this.maxI = maxI;
-        this.deltaR = deltaR;
         this.deltaI = deltaI;
         this.maxIterationen = maxIterationen;
-        this.queue = queue;
+        this.columsQueue = columsQueue;
+        this.punkteQueue = punkteQueue;
     }
 
+    /** Die Berechnung der Punkte. */
     @Override
-    public void run()
-    {
-        //System.out.println(this.currentThread() +" gestartet");
-        //System.out.println(minR +" "+ maxR+" "+ deltaR);
-
-        int iterationen;
-        // Die Haupt-Schleife
-        //TODO Statt +=
-        for (double cr = minR; cr < maxR; cr += deltaR) {
-            //TODO Liste für eine Spalte erstellen
-
-            for (double ci = minI; ci < maxI; ci += deltaI)
-            {
-                //Das ist die ganze Rechen-Zauberei.
-                iterationen = istInMenge(cr, ci);
-                //Der Thread blockiert, wenn die Queue voll ist.
-                try {
-                    queue.put(new Punkt(cr, ci, iterationen));
-                } catch (InterruptedException e) {
-                    this.stop();
-                }
-            }
+    public void run() {
+        try {
+            Berechnung.berechnePunkte(minI, maxI, deltaI, maxIterationen, columsQueue, punkteQueue);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-    }
-
-    public int istInMenge(double cr, double ci)
-    {
-        int maxIter = maxIterationen;
-        double zr = cr;
-        double zi = ci;
-        double zrtemp;
-        int i;
-
-        for (i = 0; i < maxIter && zr*zr+zi*zi <200; i++) {
-            zrtemp =  zr*zr - zi*zi +cr;
-            zi = 2*zr*zi + ci;
-            zr = zrtemp;
-        }
-
-        return i;
-    }
-
-    public BlockingQueue<Punkt> getQueue() {
-        return queue;
+        System.out.println(this.toString() +" ist zu einem Ende gekommen um "+ System.currentTimeMillis());
     }
 }
