@@ -1,0 +1,28 @@
+Ein paar Ideen fürs Layout:
+
+Auf Klassen aufteilen:
+* Eingabe der Werte
+* Root Layout
+* ZeichenRegionen (Events hinzufügen?)
+
+Debug Fenster:
+* Umschalten können.
+* Alle Layout-Werte, übernehmen von V2.
+* Über welchem Punkt die Maus gerade ist.
+
+Eine Schicht, in der die Iterationen angezeicht
+werden für den Punkt, über den die Maus ist.
+Mit entsprechender Farbe?
+
+
+Einheitliche Schnittstellen gehören her.
+* Universelles DoppelKoordsys
+* Auf das die Events, die Berechnung und das Layout zugreifen.
+Eine ImageView-Klasse, die ein dazugehöriges DoppelKoordsys hat,
+und in der das transformieren geschieht.
+
+Die ZeichenRegionen enterben, damit ich sie unabhängig verwenden kann?
+
+
+Vollbildmodus, bei dem keine Eingaben sichtbar sind.
+Screenshot-Funktion.

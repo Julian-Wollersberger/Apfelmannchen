@@ -1,0 +1,33 @@
+package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.zeichenfläche
+
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
+import at.htlwels.bhit.wollersbergerjulian.HauptfensterController
+import javafx.scene.layout.Region
+
+/**
+ * Die [InteraktiveZeichenRegion] enthält als Kinder die [GenauigkeitsEbene]n.
+ * Jede Genauigkeits-Ebene soll aus vielen Einzelbildern bestehen.
+ * (Die Genauigkeits-Ebenen sind [children].)
+ *
+ * Die [MouseEvents] werden auf diese Node registriert.
+ * Hier wird die aktuelle Zoom-Stufe und die Verschiebung gespeichert.
+ */
+class InteraktiveZeichenRegion(var bereich: Bereich)
+    : ZeichenRegion() {
+
+    /** Die [GenauigkeitsEbene] sind in:
+     * super.getChildren()
+     * Dort drinnen sollen nur zwei Ebenen sein:
+     * Die aktuell und die ungenauere.
+     *
+     *
+     * TODOO Liste für alle anderen Ebenen.
+     * Vielleicht [java.lang.ref.WeakReference] */
+
+    override fun layoutChildren() {
+        // Eigentlich kann ich das alles an Genauigkeits-Ebene übergeben.
+    }
+
+    override fun reset() {
+    }
+}
