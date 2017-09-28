@@ -1,0 +1,26 @@
+---- Werte, die zum Berechnen gebraucht werden:
+
+fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int
+fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color): Int
+fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): LinkedList<IterationsWerte> {
+
+fun zeichneIterationenFürPunkt(params: BerechnungsParameter,
+                               koordsys: DoppelKoordinatenSystem,
+                               px: Double, py: Double) {
+
+ *  Parameter: bereich: Bereich, spaltenzahl: Int, zeilenzahl: Int,
+ *             maxIterationen: Int, distanz: Double, grundfarbe: Color,
+ *             zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit)
+
+
+--- Parameter für den Algorithmus:
+maxIterationen
+maxDistanz
+grundfarbe
+
+DoppelKoordinatenSystem <- bereich,spaltenzah,zeilenzahl
+
+zeichnePunkt
+
+
+

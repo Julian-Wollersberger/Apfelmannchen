@@ -1,7 +1,7 @@
-package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.zeichenfläche
+package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 
+import javafx.scene.image.Image
 import javafx.scene.layout.Region
-
 
 //Created by julian on 18.07.17.
 /**
@@ -24,6 +24,10 @@ abstract class ZeichenRegion : Region() {
     /** Die Zeichenfläche soll zurückgesetzt werden und neu
      * berechnet werden. */
     abstract fun reset()
+
+    /** Es ist einfacher, die EventHander erst nach
+     * dem initialisieren zu registrieren. */
+    abstract fun registerEventHanders()
 
     /********  Must-Override
      * A Region subclass must override

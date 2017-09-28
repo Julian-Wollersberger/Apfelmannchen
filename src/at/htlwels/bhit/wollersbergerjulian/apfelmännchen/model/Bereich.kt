@@ -1,7 +1,5 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model
 
-import com.sun.jndi.ldap.Ber
-
 // Created by julian on 11.07.17.
 /**
  * Diese Klasse enthält die Grenzen eines

@@ -1,11 +1,10 @@
-package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.zeichenfläche
+package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.BerechnungsParameter
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.zeichneIterationenFürPunkt
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.HauptfensterController
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.Standardwerte
-import javafx.application.Platform
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
+import javafx.event.EventHandler
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.input.MouseEvent
@@ -17,33 +16,42 @@ import javafx.scene.input.MouseEvent
  *
  * Diese Region ist nicht zoombar, sondern
  * die Grenzen ändern sich nicht.
+ * TODO Es soll das koordsys von InteraktiveZeichenRegion abfragen.
  *
  * Der Code ist ziehmlich 1:1 aus SimpleZeichenRegion kopiert.
+ *
+ * TODO Punkt-Stärke soll mehr als 1 Pixel sein.
  */
 class PunktZeichenregion(
-        private val controller: HauptfensterController
+        private val controller: ZeichenflächeController
 ) : ZeichenRegion() {
+
+    override fun registerEventHanders() {
+        controller.addEventHandler(MouseEvent.MOUSE_MOVED, EventHandler { zeichneIterationen(it) })
+    }
 
     /** Berechnet das Bild neu.
      * Dazu werden die Eingaben ausgelesen,
      * die Maße aktualisiert. */
     fun zeichneIterationen(event: MouseEvent) {
-        // Werte aus TextFields holen
-        val gelesenerBereich = controller.leseBereich()
-        val maxIterationen = controller.leseMaxIterationen()
+
+        // Werte aus der Eingabe holen
+        val gelesenerBereich = controller.eingabeBereich
+        val params = ApfelmännchenParameter(
+                controller.eingabeMaxIterationen,
+                controller.eingabeMaxDistanz,
+                controller.eingabeGrundfarbe
+        )
 
         /* Mit den aktuellen Werten ein neues entzerrtes Koordsys berechnen. */
         val koordsys = DoppelKoordinatenSystem(gelesenerBereich, getContentWidth(), getContentHeight()).entzerre()
 
-        // Das Bild und die Parameter dazu
+        // Das Bild
         val image = WritableImage(koordsys.breite.toInt(), koordsys.höhe.toInt())
         val pixelWriter = image.pixelWriter
-        val params = BerechnungsParameter(koordsys.kBereich, koordsys.breite.toInt(), koordsys.höhe.toInt(),
-                maxIterationen, Standardwerte.DISTANZ, Standardwerte.GRUNDFARBE,
-                pixelWriter::setArgb)
 
         // Bild berechnen
-        zeichneIterationenFürPunkt(params, koordsys, event.x, event.y)
+        zeichneIterationenFürPunkt(event.x, event.y, koordsys, params, pixelWriter::setArgb)
 
         // Mach ein neues ImageView
         children.clear()

@@ -38,6 +38,9 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model
  *  sind in einigen Formeln ein Vorzeichen vertauscht.
  *  Vb und Vh sind hier der Versatz der Koordinaten-Ursprünge in Pixel.
  *  Vh geht wie höhe nach unten.
+ *
+ *  TODO Methoden zum Transformieren,... in eigene Datei.
+ *  TODO Breite als BreiteInt: Math.round().toInt
  */
 data class DoppelKoordinatenSystem(
     /* Kartesischer Bereich.
@@ -107,7 +110,8 @@ data class DoppelKoordinatenSystem(
     }
     
     /** Bereich und scale anpassen, sodass es nicht mehr verzerrt ist.
-     * Das Kartesische Koordsys braucht ein Verhältnis von 1:1. */
+     * Das Kartesische Koordsys braucht ein Verhältnis von 1:1.
+     * (d.h. die scales müssen gleich sein.) */
     fun entzerre(): DoppelKoordinatenSystem {
         if(scaleBreite > scaleHöhe) {
             // Ermitteln, wie viel links und rechts hinzugefügt werden muss.

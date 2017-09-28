@@ -1,7 +1,6 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.BerechnungsParameter
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.IterationsWerte
 import javafx.scene.paint.Color
@@ -12,12 +11,20 @@ import java.util.*
  * Hier stehen die Funktionen zum Berechnen der
  * Punkte der Mandelbrotmenge.
  *
+ * #Wichtigste Funktionen:
  * [istInMenge] Der Iterations-Algorithmus für jeden Punkt
  * [berechneBereich] Schleife, um alle Punkte in einem (Bild)Bereich zu berechnen
  * [berechneFarbe] Eine schöne Farbe für einen Punkt basierend auf der Anzahl der
  * benötigten Iterationen.
  *
- * TODO neue Funktionen hier beschreiben
+ * #Hilfsfunktionen:
+ * [colorToArgbInt] Ein Color-Objekt bzw. drei Farb-Werte werden zu einem
+ * Integer umgewandelt, wie es ein WriteableImage braucht.
+ * [alleIterationen] Eine LinkedList mit allen Iterationsschritten
+ * der Berechnung.
+ * [zeichneIterationenFürPunkt] Zeichnet für den übergebenen Pixel-Punkt alle Schritte
+ * des Iterations-Algorithmus.
+ *
  */
 
 /**Diese Iteration ist das **Herzstück der Mandelbrotmenge**.
@@ -49,12 +56,11 @@ fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int {
     var zr = cr
     var zi = ci
     var zrtemp: Double
-    var i: Int
     // Distanz wird mit Pythagoras berechnet: dist² = zr² + zi²
     // Da Wurzel berechnen langsam ist, wird stattdessen der Vergleichswert quadriert.
     val maxDistanzQuad = maxDistanz * maxDistanz
 
-    i = 0
+    var i: Int = 0
     while (i < maxIter && zr*zr + zi*zi < maxDistanzQuad) {
         zrtemp = zr * zr - zi * zi + cr
         zi = 2.0 * zr * zi + ci
@@ -70,40 +76,49 @@ fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int {
 * Erzeugt ein anderes schönes Muster.
 * https://youtu.be/qhbuKbxJsk8?t=5m52s
 *
-zrtemp = zr*zr*zr - 3*zr*zi*zi +cr;
-zi = 3*zr*zr*zi - zi*zi*zi +ci;
+zrtemp = zr*zr*zr - 3*zr*zi*zi + cr;
+zi = 3*zr*zr*zi - zi*zi*zi + ci;
 zr = zrtemp;
 * */
 
-/**Berechnet jeden Punkt im Bereich.
+/**Berechnet jeden Punkt im Bereich des koordsys.
  * Das Bild, auf das gezeichnet wird, hat die
- * Größe spaltenzahl*zeilenzahl. Daraus ergibt
- * sich die komplexe Schrittweite zwischen den
- * Punkten und, mit maxIterationen, wie lange
+ * Größe breite*höhe.
+ * Daraus ergibt sich die Schrittweite zwischen den
+ * Punkten.
+ * Mit maxIterationen kann man steuern, wie lange
  * die Berechnung dauert.
  *
  * Für jeden Punkt wird istInMenge ausgerechnet, und
  * mit der resultierenden Farbe dann gezeichnet.
  *
- *  Parameter: bereich: Bereich, spaltenzahl: Int, zeilenzahl: Int,
- *             maxIterationen: Int, distanz: Double, grundfarbe: Color,
- *             zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit)
+ * @param koordsys Dessen Bereich  wird gezeichnet
+ * und dessen Breite und Höhe sind die Dimensionen des Bildes.
+ * @param args Fasst maxIterationen, maxDistanz und grundfarbe zusammen.
+ * @param zeichnePunkt Mit dieser Funktion wird jeder Punkt gezeichnet.
  */
-fun berechneBereich(arg: BerechnungsParameter) {
-    var cr = arg.bereich.kxMin
-    var ci = arg.bereich.kyMax
-    val schrittR: Double = (arg.bereich.kxMax - arg.bereich.kxMin) / arg.spaltenzahl
-    val schrittI: Double = -(arg.bereich.kyMax - arg.bereich.kyMin) / arg.zeilenzahl
+fun berechneBereich(
+        koordsys: DoppelKoordinatenSystem,
+        args: ApfelmännchenParameter,
+        zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit
+) {
+    var cr = koordsys.kxMin
+    var ci = koordsys.kyMax
+    val spaltenzahl = koordsys.breite.toInt()
+    val zeilenzahl = koordsys.höhe.toInt()
+    //TODO Schrittweite berechnen in DoppelKoordsys hinein
+    val schrittR: Double = (koordsys.kxMax - koordsys.kxMin) / spaltenzahl
+    val schrittI: Double = -(koordsys.kyMax - koordsys.kyMin) / zeilenzahl
 
-    for (i in 0..(arg.spaltenzahl-1)) {
+    for (i in 0..(spaltenzahl-1)) {
         // Kein += damit weniger Rundungsfehler
-        cr = arg.bereich.kxMin + schrittR * i
-        for (j in 0..(arg.zeilenzahl-1)) {
-            ci = arg.bereich.kyMax + schrittI * j
+        cr = koordsys.kxMin + schrittR * i
+        for (j in 0..(zeilenzahl-1)) {
+            ci = koordsys.kyMax + schrittI * j
 
-            arg.zeichnePunkt(i, j, berechneFarbe(
-                    istInMenge(cr, ci, arg.maxIterationen, arg.distanz),
-                    arg.maxIterationen, arg.grundfarbe))
+            val iter = istInMenge(cr, ci, args.maxIterationen, args.maxDistanz)
+            val farbe = berechneFarbe(iter, args.maxIterationen, args.grundfarbe)
+            zeichnePunkt(i, j, farbe)
 
             // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:
             /*if(Math.abs(cr) <0.003 || Math.abs(ci) <0.003)
@@ -221,10 +236,9 @@ fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): L
     var zr = cr
     var zi = ci
     var zrtemp: Double
-    var i: Int
     val maxDistanzQuad = maxDistanz * maxDistanz
 
-    i = 0
+    var i: Int = 0
     while (i < maxIter && zr*zr + zi*zi < maxDistanzQuad) {
         zrtemp = zr * zr - zi * zi + cr
         zi = 2.0 * zr * zi + ci
@@ -238,25 +252,29 @@ fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): L
 }
 
 /**
- * Zeichnet für den übergebenen Pixel-Punkt alle Schritte
+ * Zeichnet für den übergebenen Pixel-Punkt (px|py) alle Schritte
  * des Iterations-Algorithmus. Siehe [istInMenge]
  * Die Farbe wird mit dem entsprechenden Iterations-Schritt
  * und [berechneFarbe] ermittelt.
  *
- * Wenn ein Schritt auserhalb des Bildes ist, wird er einfach nicht angezeigt.
+ * Wenn ein Schritt auserhalb des Bildes ist, wird er
+ * einfachnicht angezeigt.
  */
-fun zeichneIterationenFürPunkt(params: BerechnungsParameter,
-                               koordsys: DoppelKoordinatenSystem,
-                               px: Double, py: Double) {
+fun zeichneIterationenFürPunkt(
+        px: Double, py: Double,
+        koordsys: DoppelKoordinatenSystem,
+        args: ApfelmännchenParameter,
+        zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit
+) {
     // Zuerst alles berechnen
     val liste = alleIterationen(koordsys.breiteToKX(px), koordsys.höheToKY(py),
-            params.maxIterationen, params.distanz)
+            args.maxIterationen, args.maxDistanz)
 
     // Und dann alles zeichnen
     for (werte in liste) {
         try {
-            params.zeichnePunkt(koordsys.kxToBreite(werte.zr).toInt(), koordsys.kyToHöhe(werte.zi).toInt(),
-                    berechneFarbe(werte.iteration, params.maxIterationen, params.grundfarbe))
+            zeichnePunkt(koordsys.kxToBreite(werte.zr).toInt(), koordsys.kyToHöhe(werte.zi).toInt(),
+                    berechneFarbe(werte.iteration, args.maxIterationen, args.grundfarbe))
         } catch(e: IndexOutOfBoundsException) {
         }
     }

@@ -8,8 +8,13 @@ import com.sun.deploy.uitoolkit.impl.awt.Applet2ImageFactory.createImage
 import java.util.*
 import com.oracle.util.Checksums.update
 import javafx.application.Platform
+import javafx.event.Event
+import javafx.scene.image.ImageView
+import javafx.scene.input.DragEvent
+import java.io.File
 import java.util.TimerTask
 import java.util.concurrent.ScheduledThreadPoolExecutor
+import javax.imageio.ImageIO
 
 
 /**
@@ -22,10 +27,15 @@ fun main(args: Array<String>) {
     print(Double.NaN + 1.0)
     // gibt NaN aus.
 
-    //val writeImage = WritableImage(10, 10)
-    //val bufferedImage = BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB)
+    val writeImage = WritableImage(10, 10)
+    val bufferedImage = BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB)
 
     //bufferedImage.getScaledInstance()
+    //Image().graphics.
+    //Image().getScaledInstance()
+    javafx.embed.swing.SwingFXUtils.fromFXImage(writeImage, null)
+
+    ImageIO.write(bufferedImage, "PNG", File("beides.png"));
 
     //stackoverflow.com/questions/16764549/timers-and-javafx#18654916
     val timer = java.util.Timer()
@@ -40,5 +50,11 @@ fun main(args: Array<String>) {
     }, 1, 1)
 
     ScheduledThreadPoolExecutor(1).queue.isEmpty()
+
+}
+
+fun drag(event: DragEvent) {
+    // Rellativ zu Event-Source
+    event.x
 }
 
