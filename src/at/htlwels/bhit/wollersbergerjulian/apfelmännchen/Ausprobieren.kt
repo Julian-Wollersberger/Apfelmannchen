@@ -1,5 +1,6 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen
 
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.ZeichenRegion
 import javafx.scene.image.WritableImage
 import java.awt.Image
 import java.awt.image.BufferedImage
@@ -12,6 +13,8 @@ import javafx.event.Event
 import javafx.scene.image.ImageView
 import javafx.scene.input.DragEvent
 import java.io.File
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
 import java.util.TimerTask
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import javax.imageio.ImageIO
@@ -51,6 +54,9 @@ fun main(args: Array<String>) {
 
     ScheduledThreadPoolExecutor(1).queue.isEmpty()
 
+    val pis = PipedInputStream()
+    pis.connect(PipedOutputStream())
+    pis.read()
 }
 
 fun drag(event: DragEvent) {

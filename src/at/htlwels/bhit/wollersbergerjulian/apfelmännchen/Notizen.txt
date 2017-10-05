@@ -1,26 +1,9 @@
----- Werte, die zum Berechnen gebraucht werden:
+Aufteilung der Berechnung in Threads!
 
-fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int
-fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color): Int
-fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): LinkedList<IterationsWerte> {
+Die GPU das Berechnen der Mandelbrotmenge überlassen.
+Den Farbalgorithmus müsste ich aber wahrscheinlich anders machen,
+? weil ein GPU-Kern kein if unterstützt ?
 
-fun zeichneIterationenFürPunkt(params: BerechnungsParameter,
-                               koordsys: DoppelKoordinatenSystem,
-                               px: Double, py: Double) {
-
- *  Parameter: bereich: Bereich, spaltenzahl: Int, zeilenzahl: Int,
- *             maxIterationen: Int, distanz: Double, grundfarbe: Color,
- *             zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit)
-
-
---- Parameter für den Algorithmus:
-maxIterationen
-maxDistanz
-grundfarbe
-
-DoppelKoordinatenSystem <- bereich,spaltenzah,zeilenzahl
-
-zeichnePunkt
-
-
+Die Entfernung quadriert sich mit jedem Schritt
+-> sie wächst mit a^n^2
 

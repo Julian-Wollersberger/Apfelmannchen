@@ -70,6 +70,7 @@ public class MainApp extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.sizeToScene();
+            primaryStage.setTitle("Apfelmännchen");
 
             //Der heilige Controller!
             /* Es wird außerdem aufgerufen:

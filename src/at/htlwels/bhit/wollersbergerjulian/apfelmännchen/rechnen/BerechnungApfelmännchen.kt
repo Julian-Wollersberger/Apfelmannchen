@@ -97,6 +97,7 @@ zr = zrtemp;
  * @param args Fasst maxIterationen, maxDistanz und grundfarbe zusammen.
  * @param zeichnePunkt Mit dieser Funktion wird jeder Punkt gezeichnet.
  */
+@Deprecated("Replace with BereichBerechnung")
 fun berechneBereich(
         koordsys: DoppelKoordinatenSystem,
         args: ApfelmännchenParameter,

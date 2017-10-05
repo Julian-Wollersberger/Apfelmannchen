@@ -3,6 +3,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.ThreadManager
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneBereich
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneBereichMultiThreaded
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
 import javafx.application.Platform
 import javafx.event.EventHandler
@@ -85,7 +86,8 @@ class InteraktiveZeichenRegion(
         val pixelWriter = neuesImage.pixelWriter
 
         val berechnung = Runnable {
-            berechneBereich(
+            berechneBereichMultiThreaded(
+                    4, //TODO Eingabe!
                     neuesImageKoordsys,
                     parameter,
                     pixelWriter::setArgb
