@@ -1,9 +1,7 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.ThreadManager
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneBereich
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneBereichMultiThreaded
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.*
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
 import javafx.application.Platform
 import javafx.event.EventHandler
@@ -41,13 +39,9 @@ class InteraktiveZeichenRegion(
         get() = controller.globalesKoordsys
         set(value) {controller.globalesKoordsys = value}
 
-    private var image = WritableImage(1, 1)
     private var imageView = ImageView()
-    /** Das Koordsys, mit dem das aktuell in [imageView] gespeicherte
-     * Bild berechnet wurde. */
-    private var imageKoordsys = koordsys
-
-    private val threadManager = ThreadManager()
+    private val verzögerer = Verzögerer()
+    private var animi: BildAnimierer? = null
 
 
     override fun registerEventHanders() {
@@ -80,45 +74,28 @@ class InteraktiveZeichenRegion(
         ).entzerre()
         val neuesImageKoordsys = koordsys.copy()
         println("${neuesImageKoordsys.breite.toInt()} ${neuesImageKoordsys.höhe.toInt()} $neuesImageKoordsys")
-
         val parameter = controller.eingabeParameter
-        val neuesImage = WritableImage(neuesImageKoordsys.breite.toInt(), neuesImageKoordsys.höhe.toInt())
-        val pixelWriter = neuesImage.pixelWriter
 
-        val berechnung = Runnable {
-            berechneBereichMultiThreaded(
-                    4, //TODO Eingabe!
-                    neuesImageKoordsys,
-                    parameter,
-                    pixelWriter::setArgb
-            )
 
-            /** Macht ein neues ImageView aus dem
-             * übergebenem Image. imageKoordsys wird aktualisiert.
-             *
-             * Es darf von einem beliebigen Thread aus
-             * aufgerufen werden, weil es [Platform.runLater] aufruft. */
-            Platform.runLater {
-                image = neuesImage
-                this.imageKoordsys = neuesImageKoordsys
-                val view = ImageView(neuesImage)
-                imageView = view
+        //TODO Beschreibung
+        verzögerer.berechneVerzögert(delay, Runnable{
+        //GlobalerThreadManager.berechne(Runnable {
+        val alterAnimi = animi
+        if(alterAnimi != null)
+            alterAnimi.stop()
 
-                children.clear()
-                children.add(view)
+        val neuerAnimator = berechneAnimiert(koordsys, parameter)
+        animi=neuerAnimator
+        println("Es berechnet jetzt animiert!")
+
+        Platform.runLater {
+        val view = ImageView(neuerAnimator.writableImage)
+        imageView = view
+
+        children.clear()
+        children.add(view)
             }
-        }
-
-        if (delay == 0L)
-            ThreadManager.berechne(berechnung)
-        else
-            threadManager.berechneVerzögert(delay, berechnung)
-
-    }
-
-    private fun bewegeBeiDrag(event: DragEvent) {
-        event.x
-        event.y
+        })
     }
 
     /**Beim Zoomen soll der kartesische Punkt, über dem die Maus ist,
@@ -139,8 +116,7 @@ class InteraktiveZeichenRegion(
 
         // Das ruft [layoutChildren] auf, damit das ImageView angepasst werden kann.
         requestLayout()
-
-        berechneBild(500L)
+        berechneBild(standardVerzögerung)
     }
 
     /** Kind soll so groß sein wie Elter.

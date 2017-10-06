@@ -13,17 +13,21 @@ import java.util.*
  *
  * #Wichtigste Funktionen:
  * [istInMenge] Der Iterations-Algorithmus für jeden Punkt
- * [berechneBereich] Schleife, um alle Punkte in einem (Bild)Bereich zu berechnen
+ * [berechneBereich] Alle Punkte im Bereich;
+ * Wurde verschoben nach [BerechnungAnimiert]
  * [berechneFarbe] Eine schöne Farbe für einen Punkt basierend auf der Anzahl der
  * benötigten Iterationen.
  *
  * #Hilfsfunktionen:
- * [colorToArgbInt] Ein Color-Objekt bzw. drei Farb-Werte werden zu einem
- * Integer umgewandelt, wie es ein WriteableImage braucht.
+ * [colorToArgbInt] Ein Color-Objekt bzw. drei Farb-Werte
+ * werden zu einem Integer umgewandelt, wie es
+ * ein WriteableImage braucht.
  * [alleIterationen] Eine LinkedList mit allen Iterationsschritten
  * der Berechnung.
- * [zeichneIterationenFürPunkt] Zeichnet für den übergebenen Pixel-Punkt alle Schritte
- * des Iterations-Algorithmus.
+ * [zeichneIterationenFürPunkt] Zeichnet für den übergebenen
+ * Pixel-Punkt alle Schritte des Iterations-Algorithmus.
+ * [alleIterationen] Gibt eine Liste aller Iterationen
+ * für einen Punkt zurück.
  *
  */
 

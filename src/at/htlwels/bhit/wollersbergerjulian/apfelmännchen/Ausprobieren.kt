@@ -8,6 +8,7 @@ import java.awt.image.MemoryImageSource
 import com.sun.deploy.uitoolkit.impl.awt.Applet2ImageFactory.createImage
 import java.util.*
 import com.oracle.util.Checksums.update
+import javafx.animation.AnimationTimer
 import javafx.application.Platform
 import javafx.event.Event
 import javafx.scene.image.ImageView
@@ -16,6 +17,7 @@ import java.io.File
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.TimerTask
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import javax.imageio.ImageIO
 
@@ -57,6 +59,8 @@ fun main(args: Array<String>) {
     val pis = PipedInputStream()
     pis.connect(PipedOutputStream())
     pis.read()
+
+    ConcurrentLinkedQueue<String>()
 }
 
 fun drag(event: DragEvent) {

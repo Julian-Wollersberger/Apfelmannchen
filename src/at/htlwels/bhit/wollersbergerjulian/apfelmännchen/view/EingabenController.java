@@ -2,8 +2,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.ThreadManager;
-import javafx.beans.value.ChangeListener;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,7 +20,7 @@ import java.util.ResourceBundle;
  * Eingabefelder Werte zu schreiben und auszulesen.
  *
  * Statische Klassen, die Eingabe-Werte brauchen,
- * werden hier damit versorgt. (ThreadManager).
+ * werden hier damit versorgt. (GlobalerThreadManager).
  *
  * Geladen und zum Scene Graph hinzugefügt werden die
  * Elemente in {@link RootLayoutController}.
@@ -56,7 +55,7 @@ public class EingabenController implements Initializable {
         setzeBreiteText(StandardwerteEingabe.SPEICHERN_BREITE);
         setzeHöheText(StandardwerteEingabe.SPEICHERN_HÖHE);
 
-        // ThreadManager soll anzahlThreads wissen.
+        // GlobalerThreadManager soll anzahlThreads wissen.
         threadsEingabe.textProperty().addListener(
             (observable, oldValue, newValue) -> {
                 int anzahlThreads;
@@ -66,7 +65,7 @@ public class EingabenController implements Initializable {
                     System.out.println("Ungültige Eingaben! " + e.getMessage());
                     anzahlThreads = StandardwerteEingabe.ANZAHL_THREADS;
                 }
-                ThreadManager.Companion.setCorePoolSize(anzahlThreads);
+                GlobalerThreadManager.Companion.setCorePoolSize(anzahlThreads);
             }
         );
     }

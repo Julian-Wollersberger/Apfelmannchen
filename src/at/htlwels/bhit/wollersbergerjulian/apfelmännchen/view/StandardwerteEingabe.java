@@ -1,6 +1,7 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
 import javafx.scene.paint.Color;
 
 // Created by julian on 02.07.17.
@@ -25,8 +26,8 @@ class StandardwerteEingabe {
     static final double MAX_DISTANZ = 10;
     static final Color GRUNDFARBE = Color.WHITE;
 
-    //Wert ist seperat in ThreadManager!
-    static final int ANZAHL_THREADS = 4;
+    //Wert ist seperat in GlobalerThreadManager!
+    static final int ANZAHL_THREADS = GlobalerThreadManager.STANDARD_ANZAHL_THREADS;
 
     static final double SPEICHERN_BREITE = 1920;
     static final double SPEICHERN_HÖHE = 1080;

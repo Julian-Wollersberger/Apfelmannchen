@@ -1,14 +1,13 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.ThreadManager
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneBereich
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
 import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.control.Label
 import javafx.scene.image.WritableImage
-import javafx.scene.layout.StackPane
 import javafx.stage.FileChooser
 import java.io.File
 import java.io.IOException
@@ -35,7 +34,7 @@ class SpeichernZeichenRegion(
     private val bilderOrdner = File(System.getProperty("user.home")
             + File.separator + "Bilder/Screenshots/Apfelmännchen")
 
-    /**Beauftragt den ThreadManager, das Bild
+    /**Beauftragt den GlobalerThreadManager, das Bild
      * zu Berechnen. Anschließend wird [speichereBild]
      * aufgerufen. */
     fun berechneBildUndSpeichere() {
@@ -56,7 +55,7 @@ class SpeichernZeichenRegion(
         val pixelWriter = neuesImage.pixelWriter
 
         // Beauftrage Thread mit der Berechnung.
-        ThreadManager.berechne(Runnable {
+        GlobalerThreadManager.berechne(Runnable {
             berechneBereich(
                     imageKoordsys,
                     parameter,
