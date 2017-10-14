@@ -1,6 +1,7 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen
 
 import javafx.beans.value.ChangeListener
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
@@ -8,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 // Created by julian on 31.08.17.
-/**TODO Beschreibung anpassen.
+/**
  * Mit dieser Klasse kann Code in einem anderen
  * Thread ausgeführt werden.
  *
@@ -19,7 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * Die Threads sind in einem statischen ThreadPool,
  * sodass es global nie mehr als spezifiziert
  * gleichzeitig geben kann. Der Wert wird
- * von der Eingabe initialisiert.
+ * von der Eingabe initialisiert und mit
+ * ChangeListener aktualisiert.
  *
  * Von einem anderen Thread dürfen JavaFx-Elemente
  * nicht verändert werden. Dafür muss
@@ -44,13 +46,16 @@ class GlobalerThreadManager {
             executor.execute(runnable)
         }
 
-        /** TODO Beschreibung */
-        fun  schedule(function: () -> Unit, delay: Long, timeUnit: TimeUnit) {
-            executor.schedule(function, delay, timeUnit)
+        /** Die übergebene Funktion wird in der
+         * nach Ablaufen der übergebenen Zeit berechnet.
+         * @return Eine [ScheduledFuture], mit der die
+         * Berechnung abgebrochen werden kann.*/
+        fun schedule(function: Runnable, delay: Long, timeUnit: TimeUnit): ScheduledFuture<*> {
+            return executor.schedule(function, delay, timeUnit)
         }
 
         /** Damit der Wert aus der Eingabe verwendet werden kann.
-         * Wird im EingabeController verwendet. */
+         * Wird im EingabeController laufend aktualisiert. */
         fun setCorePoolSize(anzahlThreads: Int) {
             executor.corePoolSize = anzahlThreads
         }

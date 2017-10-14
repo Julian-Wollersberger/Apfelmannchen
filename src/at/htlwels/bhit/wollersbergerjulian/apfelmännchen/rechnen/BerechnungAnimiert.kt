@@ -9,7 +9,7 @@ import java.nio.IntBuffer
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
-/** TODO Beschreibung
+/** TODO Austauschbar machen durch eigene Klassen und Interfaces.
  * Created by julian on 06.10.17.
  */
 
@@ -79,7 +79,12 @@ class BildAnimierer(
 
 }
 
-/**Berechnet jeden Punkt im Bereich des koordsys.
+/**Hier werden außerdem nur alle n-ten Spalten
+ * berechnet. Alle anderen können in anderen
+ * Aufrufen dieser Funktion in verschiedenen
+ * Threads gemacht werden.
+ *
+ * Berechnet jeden Punkt im Bereich des koordsys.
  * Das Bild, auf das gezeichnet wird, hat die
  * Größe breite*höhe.
  * Daraus ergibt sich die Schrittweite zwischen den
@@ -90,11 +95,13 @@ class BildAnimierer(
  * Für jeden Punkt wird istInMenge ausgerechnet, und
  * mit der resultierenden Farbe dann gezeichnet.
  *
- *  TODO Beschreibung
+ * @param jedeWievielteSpalte Es wird nur jede n-te Spalte berechnet.
+ * @param offset Ob es mit der 1. oder 2. oder x-ten Spalte anfangen soll.
  * @param koordsys Dessen Bereich  wird gezeichnet
  * und dessen Breite und Höhe sind die Dimensionen des Bildes.
  * @param args Fasst maxIterationen, maxDistanz und grundfarbe zusammen.
- * @param zeichnePunkt Mit dieser Funktion wird jeder Punkt gezeichnet.
+ * @param queue Hierhinein kommen Arrays der berechneten Farbwerte
+ * einer Spalte.
  */
 private fun berechneTeilBereich(
         offset: Int, jedeWievielteSpalte: Int,

@@ -8,26 +8,26 @@ import javafx.event.EventHandler
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.input.DragEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 
 // Created by julian on 01.09.17.
 /**
- * Zeichnet und kann zoomen.
+ * Dies ist eine ZeichenRegion, die auf Mauseingaben
+ * reagiert mittels MouseEvents.
  *
- * TODO Beschreibung
+ * Gezoomt wird durch Scrollen und das Bild
+ * bewegt mit Press-Drag-Release.
+ * Dabei ist ein [Verzögerer] eingebaut, damit der
+ * Benutzer eine Geste vollständig machen kann, ohne
+ * dass bei jedem Teilschritt berechnet wird.
  *
- * TODO Nächster größerer Schritt:
- * Hier herein soll wirklich nur noch das Layout kommen.
- * Eine Funktion berechneBild() : Image soll wo anders dazu kommen.
+ * Die Eingaben verändern das globaleKoordsys und das
+ * Bild wird damit und mit aktualisierten Eingaben
+ * neu berechnet.
  *
- * Eine neue Klasse machen dafür:
- * Sie nimmt Bereich, breite und höhe und enthält eine
- * Funktionen, die ein Bild liefert, und eine, die Platform.runLater macht.
- *
- * Hier wird nur noch diese Klasse aufgerufen.
- *
- * Eigene Klasse für Event-Behandlung und resultierenden
- * manipulieren des globalenKoordinatensystem. EventController
+ * Was leider nicht geht, ist die Eingaben
+ * flüssig zu gestalten, mit scale() und translate().
  */
 class InteraktiveZeichenRegion(
         private val controller: ZeichenflächeController
@@ -42,10 +42,21 @@ class InteraktiveZeichenRegion(
     private var imageView = ImageView()
     private val verzögerer = Verzögerer()
     private var animi: BildAnimierer? = null
+    private var dragStartEvent: MouseEvent? = null
 
 
     override fun registerEventHanders() {
+        // Scrollen
         controller.addEventHandler(ScrollEvent.SCROLL, EventHandler { zoomeBeimScrollen(it) })
+        // Herumbewegen
+        controller.addEventHandler(MouseEvent.MOUSE_PRESSED, EventHandler { startePressDragRelease(it) })
+        controller.addEventHandler(MouseEvent.MOUSE_RELEASED, EventHandler { dragBeendet(it) })
+        // Punkt des Mausklicks ausgeben
+        controller.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
+            println("Geklickt auf r=${koordsys.breiteToKX(it.x)} i=${koordsys.höheToKY(it.y)}")
+            println("Anzahl Iterationen:"+ alleIterationen(koordsys.breiteToKX(it.x), koordsys.höheToKY(it.y),
+                    controller.eingabeMaxIterationen, controller.eingabeMaxDistanz).size)
+        })
     }
 
     /**Diese Methode berechnet ein neues Bild mit den
@@ -106,17 +117,50 @@ class InteraktiveZeichenRegion(
      * Nach dem Zoomen sind der Bereich, V und scale
      * verändert; sie repräsentieren die neue Ansicht.
      * Das berechnete Bild passt nicht mehr dazu.
-     *
-     * //fixme koordsys wurde auf einmal NaN. Vielleicht war event.deltaY==0
      */
     private fun zoomeBeimScrollen(event: ScrollEvent) {
         val zoomFaktor = 1 - event.deltaY / 120
 
-        koordsys = koordsys.erzeugeKartesischenAusschnitt(zoomFaktor, event.x, event.y)
+        val neuesKoordsys = koordsys.erzeugeKartesischenAusschnitt(zoomFaktor, event.x, event.y)
+        if(neuesKoordsys.kxSpanne != Double.NaN
+                && neuesKoordsys.kySpanne != Double.NaN
+                && neuesKoordsys.breite != Double.NaN
+                && neuesKoordsys.höhe != Double.NaN
+                ) {
+            koordsys = neuesKoordsys
+        } else
+            println("Koordsys auf einmal NaN geworden! Zoomfaktor=$zoomFaktor \n" +
+                    "Alt=$koordsys \nNeu=$neuesKoordsys")
 
         // Das ruft [layoutChildren] auf, damit das ImageView angepasst werden kann.
         requestLayout()
-        berechneBild(standardVerzögerung)
+        berechneBild(Verzögerer.standardVerzögerung)
+    }
+
+    /** Wenn der Benutzer die Maus niederdrückt. */
+    private fun startePressDragRelease(event: MouseEvent) {
+        dragStartEvent = event
+    }
+    /** Beim Loslassen des Maus-Knopfes.
+     * Ist sie seit dem Niederdrücken bewegt worden, so
+     * verschiebe das Bidl. */
+    private fun dragBeendet(event: MouseEvent) {
+        // Wenn es nicht die selbe Position ist, dann bewege
+        val start = dragStartEvent
+        if(start != null) {
+            if (event.x != start.x && event.y != start.y)
+                bewege(event.x - start.x, event.y - start.y)
+        }
+    }
+
+    /** Das Bild bewegen.
+     * @param x um wie viel in Breite-Richtung bewegen
+     * @param y um wie viel in Höhe-Richtung bewegen */
+    private fun bewege(x: Double, y: Double) {
+        koordsys = koordsys.verschiebeUmPixel(x, y)
+
+        requestLayout()
+        berechneBild(0)
     }
 
     /** Kind soll so groß sein wie Elter.

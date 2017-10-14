@@ -54,6 +54,7 @@ data class DoppelKoordinatenSystem(
     /** Skalierunsfaktor in px/1.
      * Wenn diese gleich sind, gibt es keine Verzerrung. */
     var scaleBreite: Double,
+    /** Muss überall mal -1 verwendet werden. */
     var scaleHöhe: Double,
 
     /** Verschiebung der Koordinaten-Ursprünge in px */
@@ -142,6 +143,8 @@ data class DoppelKoordinatenSystem(
      * + scale /= faktor
      * + Die neue Spanne ist Spanne/zoomFaktor.
      * + Alle anderen Vorher-/Nachher-Maße können nicht multipliziert werden.
+     *
+     * TODO zoomFaktor muss !=0 sein und nicht NaN.
      * */
     fun erzeugeKartesischenAusschnitt(zoomFaktor: Double, zentrumBreite: Double, zentrumHöhe: Double): DoppelKoordinatenSystem {
         /* Wo die Maus ist, ist das Zentrum der Transformation.
@@ -164,6 +167,22 @@ data class DoppelKoordinatenSystem(
         /* Dann Bereich verschieben: */
         return DoppelKoordinatenSystem(skalKoords.kBereich.verschoben(deltaKX, deltaKY),
                 breite, höhe)
+    }
+
+    /**Für ein DragEvent gedacht. Der Bereich wird um
+     * so viele Pixel verschoben, wie die Maus bewegt wurde.
+     * @param umBreite um wie viele Pixel das Bild
+     * in Breite-Richtung verschoben wird.
+     * @param umHöhe in Höhe-Richtung */
+    fun verschiebeUmPixel(umBreite: Double, umHöhe: Double): DoppelKoordinatenSystem {
+        val umKx = umBreite / scaleBreite
+        val umKy = - umHöhe / scaleHöhe
+        return DoppelKoordinatenSystem(
+                kxMin - umKx, kxMax - umKx,
+                kyMin - umKy, kyMax - umKy,
+                scaleBreite, scaleHöhe,
+                Vb, Vh
+        )
     }
 
     /** Verschiebung in layoutChildren berechnen.

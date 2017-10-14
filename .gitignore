@@ -4,6 +4,7 @@
 *.ear
 hs_err_pid*
 META-INF/
+*.jar
 
 ## Intellij
 .idea/
