@@ -1,12 +1,16 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.einausgabe.EintragV5;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -41,6 +45,8 @@ public class EingabenController implements Initializable {
     @FXML private TextField breiteEingabe;
     @FXML private TextField höheEingabe;
 
+    @FXML private TableView<EintragV5> ansichtenTable;
+
     /** Muss gesetzt werden! */
     private RootLayoutController rootLayoutController;
 
@@ -68,6 +74,16 @@ public class EingabenController implements Initializable {
                 GlobalerThreadManager.Companion.setCorePoolSize(anzahlThreads);
             }
         );
+/*
+        //Schülerdaten in die Tabelle aufnehmen
+        vornameColumn.setCellValueFactory(cellData -> cellData.getValue().vornameProperty());
+        nachnameColumn.setCellValueFactory(cellData -> cellData.getValue().nachnameProperty());
+
+        // leer initialisieren
+        showSchülerDetails(null);
+        // ereignisbehandlung
+        schülerTabableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showSchülerDetails(newValue));*/
     }
 
     /** Speichert ein Bild der Zeichenfläche
@@ -76,6 +92,18 @@ public class EingabenController implements Initializable {
     private void speichereBild(ActionEvent event) {
         rootLayoutController.getZeichenflächeController().speichereZeichenfläche(true);
     }
+
+    //TODO Ansichten anzeigen
+    //TODO Ansichten speichern mit Datei-Dialog
+    //TODO Ansichten laden mit Datei-Dialog
+    //TODO Bild speichern: Option Ansicht speichern
+
+    public void setRootLayoutController(RootLayoutController rootLayoutController) {
+        this.rootLayoutController = rootLayoutController;
+    }
+
+    //------------- Einlesen der Werte ------------//
+    //------------- Bereich -----------------------//
 
     /** Setzt die angezeigten Werte in den Eingabefeldern
      * für minR, maxR, minI und maxI. */
@@ -114,6 +142,8 @@ public class EingabenController implements Initializable {
 
         return bereich;
     }
+
+    //------------- Parameter ------------//
 
     /** Setzt den angezeigten Wert im Eingabefeld für
      * die Maximale-Iterationen-Anzahl. */
@@ -169,6 +199,8 @@ public class EingabenController implements Initializable {
         }
     }
 
+    //------------- Bild speichern ------------//
+
     /** Setzt den angezeigten Wert im Eingabefeld für
      * die Breite beim Speichern. */
     public void setzeBreiteText(double breite) {
@@ -203,9 +235,5 @@ public class EingabenController implements Initializable {
             System.out.println("Ungültige Eingabe! "+ e.getMessage());
             return StandardwerteEingabe.SPEICHERN_HÖHE;
         }
-    }
-
-    public void setRootLayoutController(RootLayoutController rootLayoutController) {
-        this.rootLayoutController = rootLayoutController;
     }
 }

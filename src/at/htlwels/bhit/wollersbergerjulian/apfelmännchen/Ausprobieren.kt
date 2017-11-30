@@ -62,6 +62,8 @@ fun main(args: Array<String>) {
 
     ConcurrentLinkedQueue<String>()
 
+    // https@ //www.toptal.com/opengl/opengl-tutorial-for-android-building-a-mandelbrot-set-generator
+    // https://github.com/skanti/Gaussian-Filter-GPU-OpenGL
 }
 
 fun drag(event: DragEvent) {

@@ -230,6 +230,16 @@ fun colorToArgbInt(red: Double, green: Double, blue: Double, opacity: Double): I
     return (a shl 24 or (r shl 16) or (g shl 8) or b)
 }
 
+/** Ein Int wieder zu einem Color-Objekt. */
+fun argbIntToColor(argb: Int): Color {
+    val a = (argb shr 24)%256 / 255.0
+    val r = (argb shr 16)%256 / 255.0
+    val g = (argb shr 8) %256 / 255.0
+    val b = (argb shr 0) %256 / 255.0
+
+    return Color(r, g, b, a)
+}
+
 /**
  * Siehe [istInMenge]
  *
