@@ -35,7 +35,7 @@ public class MenüLeisteController implements Initializable {
      * mit der in den Eingaben spezifizierte Größe. */
     @FXML
     private void speichereBild(ActionEvent event) {
-        rootLayoutController.getZeichenflächeController().speichereZeichenfläche(true);
+        rootLayoutController.getZeichenflächeController().speichereZeichenfläche();
     }
 
     @FXML

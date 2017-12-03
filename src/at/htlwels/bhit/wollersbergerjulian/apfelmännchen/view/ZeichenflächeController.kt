@@ -97,22 +97,11 @@ class ZeichenflächeController(
         zeichenRegion.reset()
     }
 
-    /** Speichert ein Bild des aktuellen Bereiches.
-     *
-     * @param spezielleAuflösung
-     * + Bei true nimmt es die Auflösung aus den Eingabefeldern.
-     * + Bei false macht es einen Snapshot der Zeichenfläche. */
-    fun speichereZeichenfläche(spezielleAuflösung: Boolean) {
-        if(spezielleAuflösung)
-            SpeichernZeichenRegion(this).berechneBildUndSpeichere()
-        else {
-            zeichenflächeRootPane.snapshot( //Ein Callback ist die Hölle.
-                    Callback<SnapshotResult, Void>({
-                        SpeichernZeichenRegion(this).speichereBild(it.image); return@Callback Void.TYPE.newInstance()
-                    }), null, null
-            )
+    /** Speichert ein Bild des aktuellen Bereiches. */
+    fun speichereZeichenfläche() {
+        SpeichernZeichenRegion(this).berechneBildUndSpeichere()
+        // Vor langer Zeit (Nov 2017) war ein Screenshot eine Option.
 
-        }
     }
 
     /** Zum registrieren von Events.

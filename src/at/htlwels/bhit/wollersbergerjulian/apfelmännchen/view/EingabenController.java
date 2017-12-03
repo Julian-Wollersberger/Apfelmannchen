@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -33,33 +34,43 @@ import java.util.ResourceBundle;
  */
 public class EingabenController implements Initializable {
 
-    @FXML private TextField minREingabe;
-    @FXML private TextField maxREingabe;
-    @FXML private TextField minIEingabe;
-    @FXML private TextField maxIEingabe;
+    /** Die Inhalte der TextFields werden auf
+     * die Standardwerte gesetzt. */
+    private ParsingTextField minREingabe = new ParsingTextField<>(StandardwerteEingabe.MIN_R);
+    private ParsingTextField maxREingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_R);
+    private ParsingTextField minIEingabe = new ParsingTextField<>(StandardwerteEingabe.MIN_I);
+    private ParsingTextField maxIEingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_I);
 
-    @FXML private TextField iterationenEingabe;
-    @FXML private TextField threadsEingabe;
-    @FXML private TextField distanzEingabe;
+    private ParsingTextField iterationenEingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_ITERATIONEN);
+    private ParsingTextField distanzEingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_DISTANZ);
+    private ParsingTextField threadsEingabe = new ParsingTextField<>(StandardwerteEingabe.ANZAHL_THREADS);
 
-    @FXML private TextField breiteEingabe;
-    @FXML private TextField höheEingabe;
+    private ParsingTextField breiteEingabe = new ParsingTextField<>(StandardwerteEingabe.SPEICHERN_BREITE);
+    private ParsingTextField höheEingabe = new ParsingTextField<>(StandardwerteEingabe.SPEICHERN_HÖHE);
 
+    /** Hier müssen die TextFields hinzugefügt werden. */
+    @FXML private GridPane bereichGridPane;
+    @FXML private GridPane parameterGridPane;
+    @FXML private GridPane speichernGridPane;
     @FXML private TableView<EintragV5> ansichtenTable;
 
     /** Muss gesetzt werden! */
     private RootLayoutController rootLayoutController;
 
-    /** Die Inhalte der TextFields werden auf
-     * die Standardwerte gesetzt. */
+    /** Die ParsingTextFields müssen manuel zur Scene hinzugefügt werden,
+     * weil der SceneBuilder keine eigenen Klassen mag.
+     * Außerdem ChangeListener für anzahlThreads und Tabelle initialisieren. */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setzeBereichTexte(StandardwerteEingabe.standardBereich());
-        setzeMaxIterationenText(StandardwerteEingabe.MAX_ITERATIONEN);
-        setzeMaxDistanzText(StandardwerteEingabe.MAX_DISTANZ);
-        setzeAnzahlThreadsText(StandardwerteEingabe.ANZAHL_THREADS);
-        setzeBreiteText(StandardwerteEingabe.SPEICHERN_BREITE);
-        setzeHöheText(StandardwerteEingabe.SPEICHERN_HÖHE);
+        bereichGridPane.add(minREingabe, 1, 0);
+        bereichGridPane.add(maxREingabe, 1, 1);
+        bereichGridPane.add(minIEingabe, 1, 2);
+        bereichGridPane.add(maxIEingabe, 1, 3);
+        parameterGridPane.add(iterationenEingabe, 1, 0);
+        parameterGridPane.add(distanzEingabe, 1, 1);
+        parameterGridPane.add(threadsEingabe, 1, 2);
+        speichernGridPane.add(breiteEingabe, 1, 0);
+        speichernGridPane.add(höheEingabe, 1, 1);
 
         // GlobalerThreadManager soll anzahlThreads wissen.
         threadsEingabe.textProperty().addListener(
@@ -75,7 +86,7 @@ public class EingabenController implements Initializable {
             }
         );
 /*
-        //Schülerdaten in die Tabelle aufnehmen
+        //Schülerdaten in die Tabelle aufnehmen TODO
         vornameColumn.setCellValueFactory(cellData -> cellData.getValue().vornameProperty());
         nachnameColumn.setCellValueFactory(cellData -> cellData.getValue().nachnameProperty());
 
@@ -90,7 +101,7 @@ public class EingabenController implements Initializable {
      * mit der in den Eingaben spezifizierte Größe. */
     @FXML
     private void speichereBild(ActionEvent event) {
-        rootLayoutController.getZeichenflächeController().speichereZeichenfläche(true);
+        rootLayoutController.getZeichenflächeController().speichereZeichenfläche();
     }
 
     //TODO Ansichten anzeigen
@@ -103,33 +114,27 @@ public class EingabenController implements Initializable {
     }
 
     //------------- Einlesen der Werte ------------//
-    //------------- Bereich -----------------------//
+    //
+    // Ist der eingelesene Wert ungültig, wird der Standard-Wert verwendet.
 
     /** Setzt die angezeigten Werte in den Eingabefeldern
      * für minR, maxR, minI und maxI. */
     public void setzeBereichTexte(Bereich bereich) {
-        minREingabe.setText(Double.toString(bereich.getKxMin()));
-        maxREingabe.setText(Double.toString(bereich.getKxMax()));
-        minIEingabe.setText(Double.toString(bereich.getKyMin()));
-        maxIEingabe.setText(Double.toString(bereich.getKyMax()));
+        minREingabe.setWert(bereich.getKxMin());
+        maxREingabe.setWert(bereich.getKxMax());
+        minIEingabe.setWert(bereich.getKyMin());
+        maxIEingabe.setWert(bereich.getKyMax());
     }
     /** Liest die eingegebenen Werte in den Eingabefeldern
      * für minR, maxR, minI und maxI.
      * Ist nur einer der Werte ungültig, wird der
      * Standard-Bereich zurückgegeben. */
     public Bereich leseBereich() {
-        Bereich bereich;
-        try {
-            bereich = new Bereich(
-                    Double.parseDouble(minREingabe.getText()),
-                    Double.parseDouble(maxREingabe.getText()),
-                    Double.parseDouble(minIEingabe.getText()),
-                    Double.parseDouble(maxIEingabe.getText()));
-
-        } catch(NumberFormatException | NullPointerException e) {
-            System.out.println("Ungültige Eingaben! "+ e.getMessage());
-            bereich = StandardwerteEingabe.standardBereich();
-        }
+        Bereich bereich = new Bereich(
+                (double) minREingabe.getWert(),
+                (double) maxREingabe.getWert(),
+                (double) minIEingabe.getWert(),
+                (double) maxIEingabe.getWert());
 
         /* Wenn min und max vertauscht sind, anpassen.
          * Sonst ist das Bild spiegelverkehrt. */
@@ -143,97 +148,39 @@ public class EingabenController implements Initializable {
         return bereich;
     }
 
-    //------------- Parameter ------------//
-
-    /** Setzt den angezeigten Wert im Eingabefeld für
-     * die Maximale-Iterationen-Anzahl. */
     public void setzeMaxIterationenText(int maxIterationen) {
-        iterationenEingabe.setText(Integer.toString(maxIterationen));
+        iterationenEingabe.setWert(maxIterationen);
     }
-    /** Liest die Eingabe im TextField und
-     * gibt sie als int zurück.
-     * Ist der Wert ungültig, wird der Standardwert
-     * zurückgegeben. */
     public int leseMaxIterationen() {
-        try {
-            return Integer.parseInt(iterationenEingabe.getText());
-        } catch(NumberFormatException e) {
-            System.out.println("Ungültige Eingabe! "+ e.getMessage());
-            return StandardwerteEingabe.MAX_ITERATIONEN;
-        }
+        return (int) iterationenEingabe.getWert();
     }
 
-    /** Setzt den angezeigten Wert im Eingabefeld für
-     * die maximale Distanz. */
     public void setzeMaxDistanzText(double maxDistanz) {
-        distanzEingabe.setText(Double.toString(maxDistanz));
+        distanzEingabe.setWert(maxDistanz);
     }
-    /** Liest die Eingabe im TextField und
-     * gibt sie als double zurück.
-     * Ist der Wert ungültig, wird der Standardwert
-     * zurückgegeben. */
     public double leseMaxDistanz() {
-        try {
-            return Double.parseDouble(distanzEingabe.getText());
-        } catch(NumberFormatException e) {
-            System.out.println("Ungültige Eingabe! "+ e.getMessage());
-            return StandardwerteEingabe.MAX_DISTANZ;
-        }
+        return (double) distanzEingabe.getWert();
     }
 
-    /** Setzt den angezeigten Wert im Eingabefeld für
-     * die Thread-Anzahl. */
     public void setzeAnzahlThreadsText(int anzahlThreads) {
-        threadsEingabe.setText(Integer.toString(anzahlThreads));
+        threadsEingabe.setWert(anzahlThreads);
     }
-    /** Liest die Eingabe im TextField und
-     * gibt sie als int zurück.
-     * Ist der Wert ungültig, wird der Standardwert
-     * zurückgegeben. */
     public int leseAnzahlThreads() {
-        try {
-            return Integer.parseInt(threadsEingabe.getText());
-        } catch(NumberFormatException e) {
-            System.out.println("Ungültige Eingabe! "+ e.getMessage());
-            return StandardwerteEingabe.ANZAHL_THREADS;
-        }
+        return (int) threadsEingabe.getWert();
     }
 
-    //------------- Bild speichern ------------//
-
-    /** Setzt den angezeigten Wert im Eingabefeld für
-     * die Breite beim Speichern. */
     public void setzeBreiteText(double breite) {
-        breiteEingabe.setText(Double.toString(breite));
+        breiteEingabe.setWert(breite);
     }
-    /** Liest die Eingabe im TextField und
-     * gibt sie als int zurück.
-     * Ist der Wert ungültig, wird der Standardwert
-     * zurückgegeben. */
     public double leseBreite() {
-        try {
-            return Double.parseDouble(breiteEingabe.getText());
-        } catch(NumberFormatException e) {
-            System.out.println("Ungültige Eingabe! "+ e.getMessage());
-            return StandardwerteEingabe.SPEICHERN_BREITE;
-        }
+        return (double) breiteEingabe.getWert();
     }
 
-    /** Setzt den angezeigten Wert im Eingabefeld für
-     * die Breite beim Speichern. */
     public void setzeHöheText(double höhe) {
-        höheEingabe.setText(Double.toString(höhe));
+        höheEingabe.setWert(höhe);
     }
-    /** Liest die Eingabe im TextField und
-     * gibt sie als int zurück.
-     * Ist der Wert ungültig, wird der Standardwert
-     * zurückgegeben. */
+
     public double leseHöhe() {
-        try {
-            return Double.parseDouble(höheEingabe.getText());
-        } catch(NumberFormatException e) {
-            System.out.println("Ungültige Eingabe! "+ e.getMessage());
-            return StandardwerteEingabe.SPEICHERN_HÖHE;
-        }
+        return (double) höheEingabe.getWert();
     }
 }
