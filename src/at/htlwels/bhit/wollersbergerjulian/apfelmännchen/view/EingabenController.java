@@ -1,17 +1,13 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.einausgabe.EintragV5;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,7 +48,7 @@ public class EingabenController implements Initializable {
     @FXML private GridPane bereichGridPane;
     @FXML private GridPane parameterGridPane;
     @FXML private GridPane speichernGridPane;
-    @FXML private TableView<EintragV5> ansichtenTable;
+    @FXML private TableView</*EintragV5*/Object> ansichtenTable;
 
     /** Muss gesetzt werden! */
     private RootLayoutController rootLayoutController;

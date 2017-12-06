@@ -54,7 +54,7 @@ data class DoppelKoordinatenSystem(
     /** Skalierunsfaktor in px/1.
      * Wenn diese gleich sind, gibt es keine Verzerrung. */
     var scaleBreite: Double,
-    /** Muss überall mal -1 verwendet werden. */
+    /** Muss überall mal -1 verwendet werden. TODO schauderhaft. */
     var scaleHöhe: Double,
 
     /** Verschiebung der Koordinaten-Ursprünge in px */

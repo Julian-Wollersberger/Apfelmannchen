@@ -11,11 +11,12 @@ import javafx.scene.paint.Color;
  * Eingabefelder eingetragen und verwendet,
  * wenn Eingaben ungültig sind.
  *
- * Klasse ist Package-private und nur für die Controller zugängig.
- * Dadurch müssen in den Paketen rechnen und zeichnen die Werte
+ * Diese Klasse sollte nur für die Controller zugängig sein.
+ * (Ich brauche sie aber für die Tests)
+ * Dadurch müssen überall anders die Werte
  * verwendet werden, die das GUI liefert.
  */
-class StandardwerteEingabe {
+public class StandardwerteEingabe {
 
     static final double MIN_R = -2.1;
     static final double MAX_R = 1;
