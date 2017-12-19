@@ -3,7 +3,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneBereich
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.ZeichenflächeController
 import javafx.application.Platform
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.control.Label
@@ -29,10 +29,15 @@ import javax.imageio.ImageIO
 class SpeichernZeichenRegion(
         private val controller: ZeichenflächeController
 ) : ZeichenRegion() {
+    private val eingaben = controller.eingaben
 
     /** Wie bekommt man den richtigen Pfad?  */
     private val bilderOrdner = File(System.getProperty("user.home")
             + File.separator + "Bilder/Screenshots/Apfelmännchen")
+
+    override fun berechneBild() {
+        berechneBildUndSpeichere()
+    }
 
     /**Beauftragt den GlobalerThreadManager, das Bild
      * zu Berechnen. Anschließend wird [speichereBild]
@@ -46,10 +51,10 @@ class SpeichernZeichenRegion(
          * Dann noch entzerren. */
         val imageKoordsys = DoppelKoordinatenSystem(
                 controller.globalesKoordsys.kBereich,
-                controller.eingabeSpeichernBreite,
-                controller.eingabeSpeichernHöhe
+                eingaben.eingabeSpeichernBreite,
+                eingaben.eingabeSpeichernHöhe
         ).entzerre()
-        val parameter = controller.eingabeParameter
+        val parameter = eingaben.eingabeParameter
 
         val neuesImage = WritableImage(imageKoordsys.breite.toInt(), imageKoordsys.höhe.toInt())
         val pixelWriter = neuesImage.pixelWriter

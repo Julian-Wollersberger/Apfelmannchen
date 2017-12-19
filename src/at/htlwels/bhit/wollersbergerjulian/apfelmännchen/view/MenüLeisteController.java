@@ -43,6 +43,13 @@ public class MenüLeisteController implements Initializable {
         rootLayoutController.getZeichenflächeController().resetZeichenRegion();
     }
 
+    /** Stößt die Berechnung an.
+     * Um mit aktualisierten Eingaben zu arbeiten. */
+    @FXML
+    private void neuBerechnen(ActionEvent event) {
+        rootLayoutController.getZeichenflächeController().berechneBild();
+    }
+
     void setRootLayoutController(RootLayoutController rootLayoutController) {
         this.rootLayoutController = rootLayoutController;
     }

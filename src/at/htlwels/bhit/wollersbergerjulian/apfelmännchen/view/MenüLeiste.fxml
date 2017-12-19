@@ -17,10 +17,11 @@
       </Menu>
       <Menu mnemonicParsing="false" text="Edit">
          <items>
-            <MenuItem mnemonicParsing="false" onAction="#resetZeichenregion" text="Reset">
+            <MenuItem mnemonicParsing="false" onAction="#resetZeichenregion" text="Zurücksetzen">
                <accelerator>
                   <KeyCodeCombination alt="UP" code="R" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                </accelerator></MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#neuBerechnen" text="Aktualisieren" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Help">

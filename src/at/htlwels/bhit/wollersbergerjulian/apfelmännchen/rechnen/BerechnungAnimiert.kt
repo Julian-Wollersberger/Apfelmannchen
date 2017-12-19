@@ -132,7 +132,7 @@ private fun berechneTeilBereich(
  * @return ein IntArray, mit den ArgbInt-Farbwerten.
  * Im ersten Element steht, für welche
  * Spalte im Bild es ist.*/
-private fun berechneSpalte(
+internal fun berechneSpalte(
         cr: Double, ciMax: Double, aktuelleSpalte: Int, zeilenzahl: Int, schrittI: Double,
         args: ApfelmännchenParameter
 ): IntArray {

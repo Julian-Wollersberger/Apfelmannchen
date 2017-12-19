@@ -1,8 +1,11 @@
-package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view
+package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.RootLayoutController
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.InteraktiveZeichenRegion
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.SpeichernZeichenRegion
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.ZeichenRegion
@@ -10,38 +13,36 @@ import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.scene.Node
-import javafx.scene.SnapshotResult
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.stage.Window
-import javafx.util.Callback
 
 // Created by julian on 27.08.17.
 /**
- * Diese Klasse ist die Schnittstelle der
- * Zeichenfläche zum restlichen GUI.
+ * Diese Klasse ist die Brücke (Schnittstelle) zwischen
+ * GUI und Rechnen.
  *
- * RootLayout soll zeichenflächeRootPane verwenden und
- * die ZeichenRegion kann auf die Eingaben über
- * diese Klasse zugreifen.
+ * Die GUI kann einerseits die Funktionen hier aufrufen,
+ * um z.B. das Speichern auszulösen und andererseits
+ * können die Berechnungen über [EingabenSchnittstelle]
+ * auf die eingegebenen Werte zugreifen.
  *
- * Alle ZeichenRegionen sollten das GlobaleKoordsys verwenden.
- * TODO Property daraus machen?
+ * Mauseingaben wie Zoomen und Bewegen werden von [MouseInputHandler] erledigt,
+ * das auch hier verwaltet wird. (weil es Zugriff auf
+ * das doppelKoordsys braucht.)
+ *
+ * RootLayout soll zeichenflächeRootPane zum SceneGraph
+ * hinzufügen. Alle ZeichenRegionen sollten das GlobaleKoordsys verwenden.
+ *
  * TODO Eigene Klasse für Events und in InteraktiveZeichenRegion nur das Bild berechnen?
  *
- * Hier können mehrere ZeichenRegionen layout-mäßig
- * verwaltet werden und initialisiert werden.
  */
 class ZeichenflächeController(
-        private val eingabenController: EingabenController,
+        eingabenController: EingabenController,
         private val rootLayoutController: RootLayoutController
 ) {
-
-    /** Das Koordinatensystem, das durch den Benutzer verändert wird. */
-    var globalesKoordsys: DoppelKoordinatenSystem
-
     /** Dieser Node soll zum SceneGraph hinzugefügt werden.
      * Derzeit ist es einfach das zeichenStackPane.
      * Dieser Name soll sich nicht ändern. */
@@ -59,13 +60,20 @@ class ZeichenflächeController(
      * soll. Schöner wärs In SpeichernRegion */
     private var ladeDingsbums: Node? = null
 
+    /** Damit kann die Berechnung auf Eingaben zugreigen. */
+    val eingaben = EingabenSchnittstelle(eingabenController)
+    /** zoomen, bewegen; manipuliert globalesKoordsys. */
+    private val mouseInputHandler: MouseInputHandler
+
+    /** Das Koordinatensystem, das durch MouseInputHandler,... verändert wird. */
+    var globalesKoordsys: DoppelKoordinatenSystem
 
     val zeichenflächePrefWidth = 600.0
     val zeichenflächePrefHeight = 450.0
 
     init {
         globalesKoordsys = DoppelKoordinatenSystem(
-                eingabeBereich,
+                eingaben.eingabeBereich,
                 zeichenflächePrefWidth,
                 zeichenflächePrefHeight)
 
@@ -85,7 +93,8 @@ class ZeichenflächeController(
         zeichenStackPane = StackPane(zeichenAnchorPane)
         zeichenStackPane.setPrefSize(zeichenflächePrefWidth, zeichenflächePrefHeight)
 
-        zeichenRegion.registerEventHanders()
+        mouseInputHandler = MouseInputHandler(this)
+        //zeichenRegion.registerEventHanders()
 
         // Angezeigt werden soll das StackPane mit Inhalten.
         zeichenflächeRootPane = zeichenStackPane
@@ -95,6 +104,12 @@ class ZeichenflächeController(
      * aufgeruen wurde. */
     fun resetZeichenRegion() {
         zeichenRegion.reset()
+    }
+
+    /** Stößt die Berechnung an. Für die EventHandler.
+     * Oder um mit aktualisierten Eingaben zu arbeiten. */
+    fun berechneBild() {
+        zeichenRegion.berechneBild()
     }
 
     /** Speichert ein Bild des aktuellen Bereiches. */
@@ -135,46 +150,4 @@ class ZeichenflächeController(
 
         ladeDingsbums = node
     }
-
-    /**
-     * Liest und setzt den Wert mithilfe des EingabenControllers.
-     */
-    var eingabeBereich: Bereich
-        get() = eingabenController.leseBereich()
-        set(value) = eingabenController.setzeBereichTexte(value)
-
-    var eingabeParameter: ApfelmännchenParameter
-        get() = ApfelmännchenParameter(
-                eingabeMaxIterationen,
-                eingabeMaxDistanz,
-                eingabeGrundfarbe)
-        set(value) {
-            eingabeMaxIterationen = value.maxIterationen
-            eingabeMaxDistanz = value.maxDistanz
-            eingabeGrundfarbe = value.grundfarbe }
-
-    var eingabeMaxIterationen: Int
-        get() = eingabenController.leseMaxIterationen()
-        set(value) = eingabenController.setzeMaxIterationenText(value)
-
-    var eingabeMaxDistanz: Double
-        get() = eingabenController.leseMaxDistanz()
-        set(value) = eingabenController.setzeMaxDistanzText(value)
-
-    //TODO Grundfarbe eingeben können
-    var eingabeGrundfarbe: Color
-        get() = StandardwerteEingabe.GRUNDFARBE
-        set(value) {}
-
-    var eingabeAnzahlThreads: Int
-        get() = eingabenController.leseAnzahlThreads()
-        set(value) = eingabenController.setzeAnzahlThreadsText(value)
-
-    var eingabeSpeichernBreite: Double
-        get() = eingabenController.leseBreite()
-        set(value) = eingabenController.setzeBreiteText(value)
-
-    var eingabeSpeichernHöhe: Double
-        get() = eingabenController.leseHöhe()
-        set(value) = eingabenController.setzeHöheText(value)
 }

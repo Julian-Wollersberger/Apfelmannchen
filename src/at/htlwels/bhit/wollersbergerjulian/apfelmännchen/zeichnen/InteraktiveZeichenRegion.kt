@@ -2,12 +2,10 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.*
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.ZeichenflächeController
 import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.scene.image.ImageView
-import javafx.scene.image.WritableImage
-import javafx.scene.input.DragEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 
@@ -32,6 +30,7 @@ import javafx.scene.input.ScrollEvent
 class InteraktiveZeichenRegion(
         private val controller: ZeichenflächeController
 ) : ZeichenRegion() {
+    private val eingaben = controller.eingaben
 
     /** Das Koordinatensystem, das durch den Benutzer verändert wird,
      * wird vom Controller verwaltet. */
@@ -45,6 +44,7 @@ class InteraktiveZeichenRegion(
     private var dragStartEvent: MouseEvent? = null
 
 
+    //TODO Weg da!
     override fun registerEventHanders() {
         // Scrollen
         controller.addEventHandler(ScrollEvent.SCROLL, EventHandler { zoomeBeimScrollen(it) })
@@ -55,7 +55,7 @@ class InteraktiveZeichenRegion(
         controller.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
             println("Geklickt auf r=${koordsys.breiteToKX(it.x)} i=${koordsys.höheToKY(it.y)}")
             println("Anzahl Iterationen:"+ alleIterationen(koordsys.breiteToKX(it.x), koordsys.höheToKY(it.y),
-                    controller.eingabeMaxIterationen, controller.eingabeMaxDistanz).size)
+                    eingaben.eingabeMaxIterationen, eingaben.eingabeMaxDistanz).size)
         })
     }
 
@@ -64,11 +64,15 @@ class InteraktiveZeichenRegion(
     override fun reset() {
         /* Mit den aktuellen Werten ein neues entzerrtes Koordsys berechnen. */
         koordsys = DoppelKoordinatenSystem(
-                controller.eingabeBereich,
+                eingaben.eingabeBereich,
                 getContentWidth(),
                 getContentHeight()
         ).entzerre()
-        berechneBild(0L)
+        berechneBildVerzögert(0L)
+    }
+
+    override fun berechneBild() {
+        berechneBildVerzögert(Verzögerer.standardVerzögerung)
     }
 
     /**Beauftragt einen neuen Thread, der
@@ -76,7 +80,7 @@ class InteraktiveZeichenRegion(
      * für Eingaben gedacht, damit nicht jedes
      * einzelne der Vielen Auslösungen des
      * Events zum neu berechnen führt. */
-    fun berechneBild(delay: Long) {
+    fun berechneBildVerzögert(delay: Long) {
         /* Mit den aktuellen Werten ein neues entzerrtes Koordsys berechnen. */
         koordsys = DoppelKoordinatenSystem(
                 koordsys.kBereich,
@@ -85,7 +89,7 @@ class InteraktiveZeichenRegion(
         ).entzerre()
         val neuesImageKoordsys = koordsys.copy()
         println("${neuesImageKoordsys.breite.toInt()} ${neuesImageKoordsys.höhe.toInt()} $neuesImageKoordsys")
-        val parameter = controller.eingabeParameter
+        val parameter = eingaben.eingabeParameter
 
 
         //TODO Beschreibung
@@ -134,7 +138,7 @@ class InteraktiveZeichenRegion(
 
         // Das ruft [layoutChildren] auf, damit das ImageView angepasst werden kann.
         requestLayout()
-        berechneBild(Verzögerer.standardVerzögerung)
+        berechneBildVerzögert(Verzögerer.standardVerzögerung)
     }
 
     /** Wenn der Benutzer die Maus niederdrückt. */
@@ -160,7 +164,7 @@ class InteraktiveZeichenRegion(
         koordsys = koordsys.verschiebeUmPixel(x, y)
 
         requestLayout()
-        berechneBild(0)
+        berechneBildVerzögert(0)
     }
 
     /** Kind soll so groß sein wie Elter.

@@ -1,5 +1,6 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.ZeichenflächeController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -98,7 +99,7 @@ public class RootLayoutController implements Initializable {
         zeichenflächeController.resetZeichenRegion();
     }
 
-    MainApp getMainApp() {
+    public MainApp getMainApp() {
         return mainApp;
     }
     void setMainApp(MainApp mainApp) {

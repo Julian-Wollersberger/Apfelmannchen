@@ -19,9 +19,13 @@ import javafx.scene.layout.Region
  *  wenn sich das Layout ändert, sondern nur, wenn es
  *  eine Unterklasse will.
  */
+@Deprecated("Input handling und zeichnen-Beauftragung trennen!")
 abstract class ZeichenRegion : Region() {
 
-    /** Die Zeichenfläche soll zurückgesetzt werden und neu
+    /** In jeder Unterklasse wird das Bild anders berechnet. */
+    abstract fun berechneBild()
+
+        /** Die Zeichenfläche soll zurückgesetzt werden und neu
      * berechnet werden. */
     abstract fun reset()
 

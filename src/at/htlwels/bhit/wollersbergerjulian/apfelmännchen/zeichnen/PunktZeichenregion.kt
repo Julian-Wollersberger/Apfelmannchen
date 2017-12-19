@@ -3,7 +3,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.zeichneIterationenFürPunkt
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.ZeichenflächeController
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.ZeichenflächeController
 import javafx.event.EventHandler
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
@@ -25,9 +25,14 @@ import javafx.scene.input.MouseEvent
 class PunktZeichenregion(
         private val controller: ZeichenflächeController
 ) : ZeichenRegion() {
+    private val eingaben = controller.eingaben
+
 
     override fun registerEventHanders() {
         controller.addEventHandler(MouseEvent.MOUSE_MOVED, EventHandler { zeichneIterationen(it) })
+    }
+
+    override fun berechneBild() {
     }
 
     /** Berechnet das Bild neu.
@@ -36,11 +41,11 @@ class PunktZeichenregion(
     fun zeichneIterationen(event: MouseEvent) {
 
         // Werte aus der Eingabe holen
-        val gelesenerBereich = controller.eingabeBereich
+        val gelesenerBereich = eingaben.eingabeBereich
         val params = ApfelmännchenParameter(
-                controller.eingabeMaxIterationen,
-                controller.eingabeMaxDistanz,
-                controller.eingabeGrundfarbe
+                eingaben.eingabeMaxIterationen,
+                eingaben.eingabeMaxDistanz,
+                eingaben.eingabeGrundfarbe
         )
 
         /* Mit den aktuellen Werten ein neues entzerrtes Koordsys berechnen. */
