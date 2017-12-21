@@ -26,6 +26,7 @@ import javax.imageio.ImageIO
  * werden können. Mit einem Snapshot
  * geht nur die tatsächliche Größe.
  */
+@Deprecated("Benutze die Strategien.")
 class SpeichernZeichenRegion(
         private val controller: ZeichenflächeController
 ) : ZeichenRegion() {

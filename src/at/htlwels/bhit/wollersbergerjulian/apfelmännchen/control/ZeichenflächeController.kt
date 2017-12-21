@@ -1,14 +1,11 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.SimpleStrategie
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.ZeichenStrategienVerwalter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.RootLayoutController
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.InteraktiveZeichenRegion
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.SpeichernZeichenRegion
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.ZeichenRegion
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -55,10 +52,11 @@ class ZeichenflächeController(
     /** Das AnchorPane vergrößert und verkleinert die zeichenRegion
      * und enthält die EventListener. */
     private val zeichenAnchorPane: AnchorPane
-    private val zeichenRegion: ZeichenRegion
     /** Ein Kleines Gimmik, das beim Laden gesetzt werden
      * soll. Schöner wärs In SpeichernRegion */
     private var ladeDingsbums: Node? = null
+
+    private val zeichenStrategieVerwalter: ZeichenStrategienVerwalter
 
     /** Damit kann die Berechnung auf Eingaben zugreigen. */
     val eingaben = EingabenSchnittstelle(eingabenController)
@@ -77,39 +75,34 @@ class ZeichenflächeController(
                 zeichenflächePrefWidth,
                 zeichenflächePrefHeight)
 
-        // Heilige ZeichenRegion!
-        zeichenRegion = InteraktiveZeichenRegion(this)
-
-        /* Die ZeichenRegion soll sich mitvergrößern. */
-        //zeichenRegion.style = "-fx-border-style: solid;-fx-border-width: 2px"
-        AnchorPane.setLeftAnchor(zeichenRegion, 0.0)
-        AnchorPane.setRightAnchor(zeichenRegion, 0.0)
-        AnchorPane.setTopAnchor(zeichenRegion, 0.0)
-        AnchorPane.setBottomAnchor(zeichenRegion, 0.0)
-
         /* Das StackPane enthält das AnchorPane,
-         * das die ZeichenRegion enthält. */
-        zeichenAnchorPane = AnchorPane(zeichenRegion)
+         * das die ZeichenStrategie-Pane enthält. */
+        zeichenAnchorPane = AnchorPane()
         zeichenStackPane = StackPane(zeichenAnchorPane)
         zeichenStackPane.setPrefSize(zeichenflächePrefWidth, zeichenflächePrefHeight)
 
-        mouseInputHandler = MouseInputHandler(this)
-        //zeichenRegion.registerEventHanders()
+        zeichenStrategieVerwalter = ZeichenStrategienVerwalter(this, zeichenAnchorPane)
+        zeichenStrategieVerwalter.addSimpleStrategie()
 
         // Angezeigt werden soll das StackPane mit Inhalten.
         zeichenflächeRootPane = zeichenStackPane
+
+        mouseInputHandler = MouseInputHandler(this)
     }
 
-    /** Darf erst aufgerufen werden, nachdem primaryStage.show()
-     * aufgeruen wurde. */
+    /** Das Koordsys in den Grundzustand versetzen. */
     fun resetZeichenRegion() {
-        zeichenRegion.reset()
+        globalesKoordsys = DoppelKoordinatenSystem(
+                eingaben.eingabeBereich,
+                zeichenflächePrefWidth,
+                zeichenflächePrefHeight)
+        zeichenStrategieVerwalter.aktualisiere()
     }
 
     /** Stößt die Berechnung an. Für die EventHandler.
      * Oder um mit aktualisierten Eingaben zu arbeiten. */
     fun berechneBild() {
-        zeichenRegion.berechneBild()
+        zeichenStrategieVerwalter.aktualisiere()
     }
 
     /** Speichert ein Bild des aktuellen Bereiches. */
@@ -120,6 +113,7 @@ class ZeichenflächeController(
     }
 
     /** Zum registrieren von Events.
+     * TODO Beschreibung anpassen
      *
      * Die ZeichenRegion kann Events nicht auf sich selbst
      * registrieren, denn wenn es zwei gibt, (also z.B.

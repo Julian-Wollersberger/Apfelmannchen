@@ -27,6 +27,7 @@ import javafx.scene.input.ScrollEvent
  * Was leider nicht geht, ist die Eingaben
  * flüssig zu gestalten, mit scale() und translate().
  */
+@Deprecated("Benutze die Strategien.")
 class InteraktiveZeichenRegion(
         private val controller: ZeichenflächeController
 ) : ZeichenRegion() {

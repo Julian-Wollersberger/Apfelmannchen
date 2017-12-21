@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent
  *
  * TODO Punkt-Stärke soll mehr als 1 Pixel sein.
  */
+@Deprecated("Benutze die Strategien.")
 class PunktZeichenregion(
         private val controller: ZeichenflächeController
 ) : ZeichenRegion() {

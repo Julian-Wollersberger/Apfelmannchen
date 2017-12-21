@@ -32,10 +32,22 @@ class MouseInputHandler(
             println("Anzahl Iterationen:"+ alleIterationen(koordsys.breiteToKX(it.x), koordsys.höheToKY(it.y),
                     controller.eingaben.eingabeMaxIterationen, controller.eingaben.eingabeMaxDistanz).size)
         })
+
+        // Wenn sich die Fenstergröße ändert
+        controller.zeichenflächeRootPane.layoutBoundsProperty().addListener {
+            observable, oldValue, newValue ->
+            koordsys = DoppelKoordinatenSystem(
+                    koordsys.kBereich,
+                    newValue.width,
+                    newValue.height
+            ).entzerre()
+            controller.berechneBild()
+        }
     }
 
     /** Das Koordinatensystem, das durch den Benutzer verändert wird,
-     * wird vom Controller verwaltet. */
+     * wird vom Controller verwaltet.
+     * TODO aktuelle Eingaben berücksichtigen! */
     private var koordsys: DoppelKoordinatenSystem
         get() = controller.globalesKoordsys
         set(value) {controller.globalesKoordsys = value}
