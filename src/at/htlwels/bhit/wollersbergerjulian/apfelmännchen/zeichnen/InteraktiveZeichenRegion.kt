@@ -56,7 +56,7 @@ class InteraktiveZeichenRegion(
         controller.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
             println("Geklickt auf r=${koordsys.breiteToKX(it.x)} i=${koordsys.höheToKY(it.y)}")
             println("Anzahl Iterationen:"+ alleIterationen(koordsys.breiteToKX(it.x), koordsys.höheToKY(it.y),
-                    eingaben.eingabeMaxIterationen, eingaben.eingabeMaxDistanz).size)
+                    eingaben.maxIterationen, eingaben.maxDistanz).size)
         })
     }
 
@@ -65,7 +65,7 @@ class InteraktiveZeichenRegion(
     override fun reset() {
         /* Mit den aktuellen Werten ein neues entzerrtes Koordsys berechnen. */
         koordsys = DoppelKoordinatenSystem(
-                eingaben.eingabeBereich,
+                eingaben.bereich,
                 getContentWidth(),
                 getContentHeight()
         ).entzerre()
@@ -90,7 +90,7 @@ class InteraktiveZeichenRegion(
         ).entzerre()
         val neuesImageKoordsys = koordsys.copy()
         println("${neuesImageKoordsys.breite.toInt()} ${neuesImageKoordsys.höhe.toInt()} $neuesImageKoordsys")
-        val parameter = eingaben.eingabeParameter
+        val parameter = eingaben.parameter
 
 
         //TODO Beschreibung

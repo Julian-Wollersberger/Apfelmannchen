@@ -3,9 +3,13 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLogarithmisch;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.SchwarzWeis;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 
@@ -40,6 +44,7 @@ public class EingabenController implements Initializable {
     private ParsingTextField iterationenEingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_ITERATIONEN);
     private ParsingTextField distanzEingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_DISTANZ);
     private ParsingTextField threadsEingabe = new ParsingTextField<>(StandardwerteEingabe.ANZAHL_THREADS);
+    @FXML private ChoiceBox<FarbAlgorithmus> farbalgorithmusChoiceBox;
 
     private ParsingTextField breiteEingabe = new ParsingTextField<>(StandardwerteEingabe.SPEICHERN_BREITE);
     private ParsingTextField höheEingabe = new ParsingTextField<>(StandardwerteEingabe.SPEICHERN_HÖHE);
@@ -67,6 +72,13 @@ public class EingabenController implements Initializable {
         parameterGridPane.add(threadsEingabe, 1, 2);
         speichernGridPane.add(breiteEingabe, 1, 0);
         speichernGridPane.add(höheEingabe, 1, 1);
+
+        farbalgorithmusChoiceBox.getItems().addAll(
+                new HsvFarbkreisLogarithmisch(),
+                new SchwarzWeis()
+        );
+        farbalgorithmusChoiceBox.getSelectionModel().select(0);
+
 
         // GlobalerThreadManager soll anzahlThreads wissen.
         threadsEingabe.textProperty().addListener(
@@ -163,6 +175,17 @@ public class EingabenController implements Initializable {
     }
     public int leseAnzahlThreads() {
         return (int) threadsEingabe.getWert();
+    }
+
+    public void setzeFarbAlgorithmus(FarbAlgorithmus farbAlgorithmus) {
+        farbalgorithmusChoiceBox.getSelectionModel().select(farbAlgorithmus);
+    }
+    public FarbAlgorithmus leseFarbAlgorithmus() {
+        FarbAlgorithmus algorithmus = farbalgorithmusChoiceBox.getSelectionModel().getSelectedItem();
+        if(algorithmus != null)
+            return algorithmus;
+        else
+            return StandardwerteEingabe.FARB_ALGORITHMUS;
     }
 
     public void setzeBreiteText(double breite) {

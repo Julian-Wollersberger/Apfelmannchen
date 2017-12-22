@@ -30,7 +30,7 @@ class MouseInputHandler(
         controller.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
             println("Geklickt auf r=${koordsys.breiteToKX(it.x)} i=${koordsys.höheToKY(it.y)}")
             println("Anzahl Iterationen:"+ alleIterationen(koordsys.breiteToKX(it.x), koordsys.höheToKY(it.y),
-                    controller.eingaben.eingabeMaxIterationen, controller.eingaben.eingabeMaxDistanz).size)
+                    controller.eingaben.maxIterationen, controller.eingaben.maxDistanz).size)
         })
 
         // Wenn sich die Fenstergröße ändert
@@ -46,8 +46,7 @@ class MouseInputHandler(
     }
 
     /** Das Koordinatensystem, das durch den Benutzer verändert wird,
-     * wird vom Controller verwaltet.
-     * TODO aktuelle Eingaben berücksichtigen! */
+     * wird vom Controller verwaltet. */
     private var koordsys: DoppelKoordinatenSystem
         get() = controller.globalesKoordsys
         set(value) {controller.globalesKoordsys = value}

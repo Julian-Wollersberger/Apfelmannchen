@@ -23,8 +23,6 @@ import java.util.ResourceBundle;
  * Die jeweiligen Controller übernehmen die Funktionalitäten,
  * insbesondere der {@link ZeichenflächeController} für
  * das Zeichnen.
- *
- * TODO Reset-Button oder Menü-Eintrag
  */
 public class RootLayoutController implements Initializable {
 
@@ -33,7 +31,6 @@ public class RootLayoutController implements Initializable {
     private EingabenController eingabenController;
     private ZeichenflächeController zeichenflächeController;
     private MenüLeisteController menüLeisteController;
-    //Menü-Leiste-Controller
 
     private MainApp mainApp;
 
@@ -92,7 +89,8 @@ public class RootLayoutController implements Initializable {
         return menüLeiste;
     }
 
-    /** Es gibt Dinge, die erst aufgerufen werden sollen, nachdem
+    /** TODO Die prefSize erst dannach auf 0 setzen?
+     * Es gibt Dinge, die erst aufgerufen werden sollen, nachdem
      * primaryStage.show() aufgerufen wurde, weil dannach erst die
      * größen berechnet sind. */
     void nachStageShow() {

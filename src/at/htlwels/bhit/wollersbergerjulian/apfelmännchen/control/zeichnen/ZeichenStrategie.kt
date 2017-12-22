@@ -12,8 +12,6 @@ import javafx.scene.layout.Pane
  * Nach dem Strategy Pattern. TODO Link
  * Mit dem Unterschied, dass mehrere Strategien gleichzeitig sein können.
  * (z.B. speichern und anzeigen und Punkte anzeigen und vielleicht Screenshot?)
- *
- * TODO Es soll nicht mehr Aufgabe sein, das doppelKoordsys zu verändern.
  */
 abstract class ZeichenStrategie(
         elternPane: Pane,

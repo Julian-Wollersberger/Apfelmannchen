@@ -52,10 +52,10 @@ class SpeichernZeichenRegion(
          * Dann noch entzerren. */
         val imageKoordsys = DoppelKoordinatenSystem(
                 controller.globalesKoordsys.kBereich,
-                eingaben.eingabeSpeichernBreite,
-                eingaben.eingabeSpeichernHöhe
+                eingaben.speichernBreite,
+                eingaben.speichernHöhe
         ).entzerre()
-        val parameter = eingaben.eingabeParameter
+        val parameter = eingaben.parameter
 
         val neuesImage = WritableImage(imageKoordsys.breite.toInt(), imageKoordsys.höhe.toInt())
         val pixelWriter = neuesImage.pixelWriter

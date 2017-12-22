@@ -1,5 +1,6 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model
 
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
 import javafx.scene.paint.Color
 
 // Created by julian on 31.08.17.
@@ -11,5 +12,6 @@ import javafx.scene.paint.Color
 data class ApfelmännchenParameter(
         val maxIterationen: Int,
         val maxDistanz: Double,
-        val grundfarbe: Color
+        val grundfarbe: Color,
+        val farbAlgorithmus: FarbAlgorithmus
 )

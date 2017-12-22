@@ -35,7 +35,7 @@ class BerechneBereichZeitmessung {
                     aktuelleSpalte = 0,
                     zeilenzahl = 100,    // zusätzliche Schleife!
                     schrittI = -7.038961753141418E-4,
-                    args = ApfelmännchenParameter(1000, StandardwerteEingabe.MAX_DISTANZ, StandardwerteEingabe.GRUNDFARBE)
+                    args = ApfelmännchenParameter(1000, StandardwerteEingabe.MAX_DISTANZ, StandardwerteEingabe.GRUNDFARBE, StandardwerteEingabe.FARB_ALGORITHMUS)
             )
         }
     }

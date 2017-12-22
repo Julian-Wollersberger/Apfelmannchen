@@ -2,6 +2,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import javafx.scene.paint.Color
@@ -15,42 +16,47 @@ import javafx.scene.paint.Color
 class EingabenSchnittstelle(
         val eingabenController: EingabenController
 ) {
-    var eingabeBereich: Bereich
+    var bereich: Bereich
         get() = eingabenController.leseBereich()
         set(value) = eingabenController.setzeBereichTexte(value)
 
-    var eingabeParameter: ApfelmännchenParameter
+    var parameter: ApfelmännchenParameter
         get() = ApfelmännchenParameter(
-                eingabeMaxIterationen,
-                eingabeMaxDistanz,
-                eingabeGrundfarbe)
+                maxIterationen,
+                maxDistanz,
+                grundfarbe,
+                farbAlgorithmus)
         set(value) {
-            eingabeMaxIterationen = value.maxIterationen
-            eingabeMaxDistanz = value.maxDistanz
-            eingabeGrundfarbe = value.grundfarbe }
+            maxIterationen = value.maxIterationen
+            maxDistanz = value.maxDistanz
+            grundfarbe = value.grundfarbe }
 
-    var eingabeMaxIterationen: Int
+    var maxIterationen: Int
         get() = eingabenController.leseMaxIterationen()
         set(value) = eingabenController.setzeMaxIterationenText(value)
 
-    var eingabeMaxDistanz: Double
+    var maxDistanz: Double
         get() = eingabenController.leseMaxDistanz()
         set(value) = eingabenController.setzeMaxDistanzText(value)
 
     //TODO Grundfarbe eingeben können
-    var eingabeGrundfarbe: Color
+    var grundfarbe: Color
         get() = StandardwerteEingabe.GRUNDFARBE
         set(value) {}
 
-    var eingabeAnzahlThreads: Int
+    var farbAlgorithmus: FarbAlgorithmus
+        get() = eingabenController.leseFarbAlgorithmus()
+        set(value) = eingabenController.setzeFarbAlgorithmus(value)
+
+    var anzahlThreads: Int
         get() = eingabenController.leseAnzahlThreads()
         set(value) = eingabenController.setzeAnzahlThreadsText(value)
 
-    var eingabeSpeichernBreite: Double
+    var speichernBreite: Double
         get() = eingabenController.leseBreite()
         set(value) = eingabenController.setzeBreiteText(value)
 
-    var eingabeSpeichernHöhe: Double
+    var speichernHöhe: Double
         get() = eingabenController.leseHöhe()
         set(value) = eingabenController.setzeHöheText(value)
 }

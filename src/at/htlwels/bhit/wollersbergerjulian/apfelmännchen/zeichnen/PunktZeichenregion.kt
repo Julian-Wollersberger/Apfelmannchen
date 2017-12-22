@@ -42,11 +42,12 @@ class PunktZeichenregion(
     fun zeichneIterationen(event: MouseEvent) {
 
         // Werte aus der Eingabe holen
-        val gelesenerBereich = eingaben.eingabeBereich
+        val gelesenerBereich = eingaben.bereich
         val params = ApfelmännchenParameter(
-                eingaben.eingabeMaxIterationen,
-                eingaben.eingabeMaxDistanz,
-                eingaben.eingabeGrundfarbe
+                eingaben.maxIterationen,
+                eingaben.maxDistanz,
+                eingaben.grundfarbe,
+                eingaben.farbAlgorithmus
         )
 
         /* Mit den aktuellen Werten ein neues entzerrtes Koordsys berechnen. */

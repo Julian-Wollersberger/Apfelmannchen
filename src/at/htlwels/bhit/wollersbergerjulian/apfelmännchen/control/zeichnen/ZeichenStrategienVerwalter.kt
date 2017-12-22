@@ -25,7 +25,7 @@ class ZeichenStrategienVerwalter(
         get() = controller.globalesKoordsys
 
     val parameter: ApfelmännchenParameter
-        get() = controller.eingaben.eingabeParameter
+        get() = controller.eingaben.parameter
 
     /** Berechnet die Bilder aller Strategien. */
     fun aktualisiere() {

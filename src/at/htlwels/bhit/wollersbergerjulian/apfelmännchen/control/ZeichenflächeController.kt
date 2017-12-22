@@ -1,6 +1,5 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.SimpleStrategie
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.ZeichenStrategienVerwalter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
@@ -13,7 +12,6 @@ import javafx.scene.Node
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
-import javafx.scene.paint.Color
 import javafx.stage.Window
 
 // Created by julian on 27.08.17.
@@ -32,9 +30,6 @@ import javafx.stage.Window
  *
  * RootLayout soll zeichenflächeRootPane zum SceneGraph
  * hinzufügen. Alle ZeichenRegionen sollten das GlobaleKoordsys verwenden.
- *
- * TODO Eigene Klasse für Events und in InteraktiveZeichenRegion nur das Bild berechnen?
- *
  */
 class ZeichenflächeController(
         eingabenController: EingabenController,
@@ -69,9 +64,11 @@ class ZeichenflächeController(
     val zeichenflächePrefWidth = 600.0
     val zeichenflächePrefHeight = 450.0
 
+
+
     init {
         globalesKoordsys = DoppelKoordinatenSystem(
-                eingaben.eingabeBereich,
+                eingaben.bereich,
                 zeichenflächePrefWidth,
                 zeichenflächePrefHeight)
 
@@ -93,7 +90,7 @@ class ZeichenflächeController(
     /** Das Koordsys in den Grundzustand versetzen. */
     fun resetZeichenRegion() {
         globalesKoordsys = DoppelKoordinatenSystem(
-                eingaben.eingabeBereich,
+                eingaben.bereich,
                 zeichenflächePrefWidth,
                 zeichenflächePrefHeight)
         zeichenStrategieVerwalter.aktualisiere()

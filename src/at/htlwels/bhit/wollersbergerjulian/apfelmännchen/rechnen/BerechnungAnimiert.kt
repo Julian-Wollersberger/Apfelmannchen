@@ -49,7 +49,7 @@ fun berechneAnimiert(
  * Derjenige, der das Bild hat, muss eine
  * Referenz auf den BildAnimierer halten. */
 class BildAnimierer(
-        public val writableImage: WritableImage,
+        val writableImage: WritableImage,
         /** Queue von Listn von einer Spalte*/
         private val queue: ConcurrentLinkedQueue<IntArray>
 ) : AnimationTimer() {
@@ -145,7 +145,7 @@ internal fun berechneSpalte(
         ci = ciMax + schrittI * j
 
         val iter = istInMenge(cr, ci, args.maxIterationen, args.maxDistanz)
-        val farbe = berechneFarbe(iter, args.maxIterationen, args.grundfarbe)
+        val farbe = args.farbAlgorithmus.berechneFarbe(iter, args.maxIterationen, args.grundfarbe)
         punktFarben[j+1] = farbe
 
         // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:
