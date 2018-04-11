@@ -2,8 +2,8 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLinear;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLogarithmisch;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.SchwarzWeis;
 import javafx.event.ActionEvent;
@@ -74,25 +74,12 @@ public class EingabenController implements Initializable {
         speichernGridPane.add(höheEingabe, 1, 1);
 
         farbalgorithmusChoiceBox.getItems().addAll(
-                new HsvFarbkreisLogarithmisch(),
+                StandardwerteEingabe.FARB_ALGORITHMUS,
+                new HsvFarbkreisLinear(),
                 new SchwarzWeis()
         );
-        farbalgorithmusChoiceBox.getSelectionModel().select(0);
+        farbalgorithmusChoiceBox.getSelectionModel().select(StandardwerteEingabe.FARB_ALGORITHMUS);
 
-
-        // GlobalerThreadManager soll anzahlThreads wissen.
-        threadsEingabe.textProperty().addListener(
-            (observable, oldValue, newValue) -> {
-                int anzahlThreads;
-                try {
-                    anzahlThreads = Integer.parseInt(newValue);
-                } catch(NumberFormatException | NullPointerException e) {
-                    System.out.println("Ungültige Eingaben! " + e.getMessage());
-                    anzahlThreads = StandardwerteEingabe.ANZAHL_THREADS;
-                }
-                GlobalerThreadManager.Companion.setCorePoolSize(anzahlThreads);
-            }
-        );
 /*
         //Schülerdaten in die Tabelle aufnehmen TODO
         vornameColumn.setCellValueFactory(cellData -> cellData.getValue().vornameProperty());

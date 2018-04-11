@@ -7,3 +7,8 @@ Den Farbalgorithmus müsste ich aber wahrscheinlich anders machen,
 Die Entfernung quadriert sich mit jedem Schritt
 -> sie wächst mit a^n^2
 
+
+Geklickt auf r=-1.1570232529816205 i=0.3027803784688486
+Anzahl Iterationen:578
+Geklickt auf r=-1.1570232529814628 i=0.30278037846875167
+Anzahl Iterationen:583

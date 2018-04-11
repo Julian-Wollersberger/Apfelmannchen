@@ -1,6 +1,5 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.ZeichenRegion
 import javafx.scene.image.WritableImage
 import java.awt.Image
 import java.awt.image.BufferedImage

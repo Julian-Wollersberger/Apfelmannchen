@@ -2,7 +2,6 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view;
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GlobalerThreadManager;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLogarithmisch;
 import javafx.scene.paint.Color;
@@ -30,9 +29,7 @@ public class StandardwerteEingabe {
     public static final double MAX_DISTANZ = 10;
     public static final Color GRUNDFARBE = Color.WHITE;
     public static final FarbAlgorithmus FARB_ALGORITHMUS = new HsvFarbkreisLogarithmisch();
-
-    //Wert ist seperat in GlobalerThreadManager!
-    public static final int ANZAHL_THREADS = GlobalerThreadManager.STANDARD_ANZAHL_THREADS;
+    public static final int ANZAHL_THREADS = 4;
 
     public static final double SPEICHERN_BREITE = 1920;
     public static final double SPEICHERN_HÖHE = 1080;

@@ -4,15 +4,22 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.Zeich
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.RootLayoutController
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.zeichnen.SpeichernZeichenRegion
+import javafx.embed.swing.SwingFXUtils
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.scene.Node
+import javafx.scene.control.Label
+import javafx.scene.image.WritableImage
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
+import javafx.stage.FileChooser
 import javafx.stage.Window
+import java.io.File
+import java.io.IOException
+import javax.imageio.ImageIO
+import javax.naming.OperationNotSupportedException
 
 // Created by julian on 27.08.17.
 /**
@@ -92,8 +99,9 @@ class ZeichenflächeController(
     fun resetZeichenRegion() {
         globalesKoordsys = DoppelKoordinatenSystem(
                 eingaben.bereich,
-                zeichenflächePrefWidth,
-                zeichenflächePrefHeight)
+                zeichenflächeRootPane.width,
+                zeichenflächeRootPane.height
+        ).entzerre()
         zeichenStrategieVerwalter.aktualisiere()
     }
 
@@ -103,7 +111,10 @@ class ZeichenflächeController(
         zeichenStrategieVerwalter.aktualisiere()
     }
 
-    /** Speichert ein Bild des aktuellen Bereiches. */
+    /** Speichert ein Bild des aktuellen Bereiches,
+     * aber mit der vom Nutzer eingegebenen Auflösung.
+     *
+     * Vor langer Zeit (Nov 2017) war ein Screenshot eine Option. */
     fun speichereZeichenfläche() {
         SpeichernZeichenRegion(this).berechneBildUndSpeichere()
         // Vor langer Zeit (Nov 2017) war ein Screenshot eine Option.
@@ -111,20 +122,15 @@ class ZeichenflächeController(
     }
 
     /** Zum registrieren von Events.
-     * TODO Beschreibung anpassen
      *
-     * Die ZeichenRegion kann Events nicht auf sich selbst
-     * registrieren, denn wenn es zwei gibt, (also z.B.
-     * InteraktiveZeichenRegion und PunktZeichenRegion),
-     * dann bekommt nur einer die Events.
-     * Wenn es aber auf ein Elter registriert wird, dann
-     * bekommen das Event alle. */
+     * Um sicherzugehen, dass alle Events nicht nur
+     * auf ein einzelnes Kind angewendet werden,
+     * werden sie von den Eltern behandelt. */
     fun <T : Event> addEventHandler(
             eventType: EventType<T>,
             eventHandler: EventHandler<T>) {
         zeichenAnchorPane.addEventHandler(eventType, eventHandler)
     }
-
 
     /** Das Window, das als Owner von Dialogen und dergleichen
      * verwendet werden soll. */
@@ -134,7 +140,7 @@ class ZeichenflächeController(
 
     /** Ein Ladedingsbums :)
      * Wenn null übergeben wird, wird es wieder gelöscht. */
-    public fun setLadeDingsbums(node: Node?) {
+    fun setLadeDingsbums(node: Node?) {
         if (ladeDingsbums != null)
             zeichenflächeRootPane.children.remove(ladeDingsbums)
         if (node != null)

@@ -29,7 +29,8 @@ class EingabenSchnittstelle(
         set(value) {
             maxIterationen = value.maxIterationen
             maxDistanz = value.maxDistanz
-            grundfarbe = value.grundfarbe }
+            grundfarbe = value.grundfarbe
+        }
 
     var maxIterationen: Int
         get() = eingabenController.leseMaxIterationen()

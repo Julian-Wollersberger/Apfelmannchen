@@ -8,7 +8,9 @@ import javafx.scene.layout.Pane
 
 // Created by julian on 19.12.17.
 /**
- * TODO Wäre ein Decorator nicht besser?
+ * Schnittstelle zwischen den Strategien (wie
+ * genau das Bild verarbeitet/angezeigt wird)
+ * und der Außenwelt.
  *
  * Es kann mehrere Strategien gleichzeitig geben. Dann
  * werden alle angesprochen.
@@ -27,13 +29,15 @@ class ZeichenStrategienVerwalter(
     val parameter: ApfelmännchenParameter
         get() = controller.eingaben.parameter
 
+    val anzahlThreads: Int
+        get() = controller.eingaben.anzahlThreads
+
     /** Berechnet die Bilder aller Strategien. */
     fun aktualisiere() {
         strategienListe.forEach {
             it.aktualisiere()
         }
     }
-
 
     /****** Factory Methods für die Strategien. ******/
     fun addSimpleStrategie() {

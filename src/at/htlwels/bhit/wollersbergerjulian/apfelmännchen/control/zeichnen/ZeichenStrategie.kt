@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane
  * Wie soll das Bild in den SceneGraph eingefügt werden?
  * Wenn es fertig ist, animiert oder doch nur speichern?
  *
- * Nach dem Strategy Pattern. TODO Link
+ * Nach dem Strategy Pattern.
  * Mit dem Unterschied, dass mehrere Strategien gleichzeitig sein können.
  * (z.B. speichern und anzeigen und Punkte anzeigen und vielleicht Screenshot?)
  */

@@ -11,14 +11,17 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 // Created by julian on 20.12.17.
 /**
- * TODO Description
+ * Das Berechnen des Apfelmännchens wird auf
+ * Threads aufgeteilt und was schon berechnet ist
+ * wird live vom BildAnimierer auf das writeableImage geschrieben.
  */
 class MultithreadedStrategie(
-        val elternPane: Pane,
+        elternPane: Pane,
         verwalter: ZeichenStrategienVerwalter
 ) : ZeichenStrategie(elternPane, verwalter) {
 
-    private var animierer: BildAnimierer? = null;
+    private var animierer: BildAnimierer? = null
+    private val berechnungMultithreaded = BerechnungMultithreaded()
 
     override fun aktualisiere() {
         try {
@@ -38,106 +41,20 @@ class MultithreadedStrategie(
             args: ApfelmännchenParameter
     ) {
         animierer?.stop()
+        berechnungMultithreaded.interrupt()
 
+        /* Remove the ones that are too old,
+        * but keep some, so that the screen doesn't turn white. */
+        if(zeichenPane.children.size >= 10)
+            zeichenPane.children.remove(0, 5)
         val writableImage = WritableImage(koordsys.breite.toInt(), koordsys.höhe.toInt())
-        elternPane.children.add(ImageView(writableImage))
+        zeichenPane.children.add(ImageView(writableImage))
 
-        val queue = ConcurrentLinkedQueue<IntArray>()
-        val anzahlThreads = GlobalerThreadManager.getCorePoolSize()
+        /* Die meiste Magie!*/
+        berechnungMultithreaded.teileAufThreadsAuf(verwalter.anzahlThreads, koordsys, args)
 
-        // Berechnung auf Threads aufteilen
-        for (i in 0..anzahlThreads - 1) {
-            GlobalerThreadManager.berechne(Runnable {
-                berechneTeilBereich(
-                        i, anzahlThreads,
-                        koordsys, args, queue)
-            })
-        }
-
-        //TODO abbrechbar machen, dazu Threads merken.
-        val animi = BildAnimierer(writableImage, queue)
+        val animi = BildAnimierer(writableImage, berechnungMultithreaded.queue)
         animi.start()
         animierer = animi
-    }
-
-    companion object {
-
-        //TODO nach Packet rechnen verschieben
-        /**Hier werden außerdem nur alle n-ten Spalten
-         * berechnet. Alle anderen können in anderen
-         * Aufrufen dieser Funktion in verschiedenen
-         * Threads gemacht werden.
-         *
-         * Berechnet jeden Punkt im Bereich des koordsys.
-         * Das Bild, auf das gezeichnet wird, hat die
-         * Größe breite*höhe.
-         * Daraus ergibt sich die Schrittweite zwischen den
-         * Punkten.
-         * Mit maxIterationen kann man steuern, wie lange
-         * die Berechnung dauert.
-         *
-         * Für jeden Punkt wird istInMenge ausgerechnet, und
-         * mit der resultierenden Farbe dann gezeichnet.
-         *
-         * @param jedeWievielteSpalte Es wird nur jede n-te Spalte berechnet.
-         * @param offset Ob es mit der 1. oder 2. oder x-ten Spalte anfangen soll.
-         * @param koordsys Dessen Bereich  wird gezeichnet
-         * und dessen Breite und Höhe sind die Dimensionen des Bildes.
-         * @param args Fasst maxIterationen, maxDistanz und grundfarbe zusammen.
-         * @param queue Hierhinein kommen Arrays der berechneten Farbwerte
-         * einer Spalte.
-         */
-        internal fun berechneTeilBereich(
-                offset: Int, jedeWievielteSpalte: Int,
-                koordsys: DoppelKoordinatenSystem,
-                args: ApfelmännchenParameter,
-                queue: ConcurrentLinkedQueue<IntArray>
-        ) {
-            var cr = koordsys.kxMin
-            val spaltenzahl = koordsys.breite.toInt() - 1
-            val zeilenzahl = koordsys.höhe.toInt() - 1
-            val schrittR: Double = (koordsys.kxMax - koordsys.kxMin) / spaltenzahl
-            val schrittI: Double = -(koordsys.kyMax - koordsys.kyMin) / zeilenzahl
-
-            var i = offset
-            while (i < spaltenzahl) {
-                // Kein += damit weniger Rundungsfehler
-                cr = koordsys.kxMin + schrittR * i
-
-                // Jede Spalte zur Queue hinzufügen.
-                val arrr = berechneSpalte(cr, koordsys.kyMax, i, zeilenzahl, schrittI, args)
-                queue.add(arrr)
-
-                i += jedeWievielteSpalte
-            }
-        }
-
-        /**Berechnet alle Punkte einer Spalte.
-         * @return ein IntArray, mit den ArgbInt-Farbwerten.
-         * Im ersten Element steht, für welche
-         * Spalte im Bild es ist.*/
-        internal fun berechneSpalte(
-                cr: Double, ciMax: Double, aktuelleSpalte: Int, zeilenzahl: Int, schrittI: Double,
-                args: ApfelmännchenParameter
-        ): IntArray {
-            val punktFarben = IntArray(zeilenzahl + 1)
-            punktFarben[0] = aktuelleSpalte
-
-            var ci = ciMax
-            for (j in 0..(zeilenzahl - 1)) {
-                // Kein += damit weniger Rundungsfehler
-                ci = ciMax + schrittI * j
-
-                val iter = istInMenge(cr, ci, args.maxIterationen, args.maxDistanz)
-                val farbe = args.farbAlgorithmus.berechneFarbe(iter, args.maxIterationen, args.grundfarbe)
-                punktFarben[j + 1] = farbe
-
-                // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:
-                /*if(Math.abs(cr) <0.003 || Math.abs(ci) <0.003)
-                    arg.zeichnePunkt(i, j, colorToArgbInt(Color.BLACK))*/
-            }
-
-            return punktFarben
-        }
     }
 }

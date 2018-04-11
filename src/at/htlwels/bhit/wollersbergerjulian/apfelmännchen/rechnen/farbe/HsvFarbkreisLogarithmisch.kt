@@ -32,7 +32,7 @@ class HsvFarbkreisLogarithmisch: FarbAlgorithmus() {
         val fraction: Double
 
         if (iterationen == maxIterationen)
-            color = super.colorToArgbInt(grundfarbe)
+            color = colorToArgbInt(grundfarbe)
         else {
             /* Exponentielles Verhalten. Der HSV-Farbkreis wird sozusagen
              * einmal rundumgegangen mit den ersten 15 Iterationen. Für die
@@ -49,36 +49,7 @@ class HsvFarbkreisLogarithmisch: FarbAlgorithmus() {
              * Und nur noch in den Bereich von 0 bis 1 bingen. */
             fraction = (iterationen - runde / 2) / (runde / 2).toDouble()
 
-            /* Die RGB-Werte folgen einem relativ einfachem Muster:
-             * Es ist immer eine Farbe auf 255, eine auf 0 und die Dritte variabel.
-             * Nach 60° ändert sich, welche. Siehe Farbauswahl bei GIMP.
-             * Schritte:
-             * 1. rot max,         grün 0,         blau wird mehr
-             * 2. rot wird weniger,grün 0,         blau max
-             * 3. rot 0,           grün wird mehr, blau max
-             * 4. rot 0,           grün max,       blau wird weniger
-             * 5. rot wird mehr,   grün max,       blau 0
-             * 6. rot max,         grün weniger,   blau 0
-             */
-            if (fraction < 0) {
-                println("Fraction kleiner 0: $fraction iterationen: $iterationen runde: $runde")
-                color = colorToArgbInt(grundfarbe)
-            } else if (fraction < 1.0 / 6)
-                color = colorToArgbInt(1.0, 0.0, fraction * 6, 1.0)
-            else if (fraction < 2.0 / 6)
-                color = colorToArgbInt(1 - (fraction - 1.0 / 6) * 6, 0.0, 1.0, 1.0)
-            else if (fraction < 3.0 / 6)
-                color = colorToArgbInt(0.0, (fraction - 2.0 / 6) * 6, 1.0, 1.0)
-            else if (fraction < 4.0 / 6)
-                color = colorToArgbInt(0.0, 1.0, 1 - (fraction - 3.0 / 6) * 6, 1.0)
-            else if (fraction < 5.0 / 6)
-                color = colorToArgbInt((fraction - 4.0 / 6) * 6, 1.0, 0.0, 1.0)
-            else if (fraction <= 6.0 / 6)
-                color = colorToArgbInt(1.0, 1 - (fraction - 5.0 / 6) * 6, 0.0, 1.0)
-            else {
-                println("Fraction größer 1: $fraction iterationen: $iterationen runde: $runde")
-                color = colorToArgbInt(grundfarbe)
-            }
+            color = HsvHueToArgb(fraction)
         }
         return color
     }

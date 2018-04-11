@@ -1,7 +1,7 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.zeitmessung
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.MultithreadedStrategie.Companion.berechneSpalte
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneSpalte
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import org.junit.jupiter.api.Test
 
