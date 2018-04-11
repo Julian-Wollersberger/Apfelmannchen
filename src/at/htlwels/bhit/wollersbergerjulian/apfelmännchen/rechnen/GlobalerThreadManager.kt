@@ -46,14 +46,6 @@ class GlobalerThreadManager {
             executor.execute(runnable)
         }
 
-        /** Die übergebene Funktion wird in der
-         * nach Ablaufen der übergebenen Zeit berechnet.
-         * @return Eine [ScheduledFuture], mit der die
-         * Berechnung abgebrochen werden kann.*/
-        fun schedule(function: Runnable, delay: Long, timeUnit: TimeUnit): ScheduledFuture<*> {
-            return executor.schedule(function, delay, timeUnit)
-        }
-
         /** Damit der Wert aus der Eingabe verwendet werden kann.
          * Wird im EingabeController laufend aktualisiert. */
         fun setCorePoolSize(anzahlThreads: Int) {

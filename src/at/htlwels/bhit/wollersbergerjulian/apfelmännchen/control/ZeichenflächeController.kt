@@ -79,7 +79,8 @@ class ZeichenflächeController(
         zeichenStackPane.setPrefSize(zeichenflächePrefWidth, zeichenflächePrefHeight)
 
         zeichenStrategieVerwalter = ZeichenStrategienVerwalter(this, zeichenAnchorPane)
-        zeichenStrategieVerwalter.addSimpleStrategie()
+        //zeichenStrategieVerwalter.addSimpleStrategie()
+        zeichenStrategieVerwalter.addMultithreadedStrategie()
 
         // Angezeigt werden soll das StackPane mit Inhalten.
         zeichenflächeRootPane = zeichenStackPane

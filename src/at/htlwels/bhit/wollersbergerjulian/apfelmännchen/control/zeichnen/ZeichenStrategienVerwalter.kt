@@ -41,4 +41,9 @@ class ZeichenStrategienVerwalter(
                 SimpleStrategie(elternPane, this)
         )
     }
+    fun addMultithreadedStrategie() {
+        strategienListe.add(
+                MultithreadedStrategie(elternPane, this)
+        )
+    }
 }
