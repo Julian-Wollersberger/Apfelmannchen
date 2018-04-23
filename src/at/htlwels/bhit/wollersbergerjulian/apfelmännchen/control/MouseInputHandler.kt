@@ -82,8 +82,7 @@ class MouseInputHandler(
     }
 
 
-    /** Wenn der Benutzer die Maus niederdrückt.
-     * fixme Es wird verzerrt! */
+    /** Wenn der Benutzer die Maus niederdrückt. */
     private fun startePressDragRelease(event: MouseEvent) {
         dragStartEvent = event
     }
@@ -94,7 +93,7 @@ class MouseInputHandler(
         // Wenn es nicht die selbe Position ist, dann bewege
         val start = dragStartEvent
         if(start != null) {
-            if (event.x != start.x && event.y != start.y)
+            if (event.x != start.x || event.y != start.y)
                 bewege(event.x - start.x, event.y - start.y)
         }
     }

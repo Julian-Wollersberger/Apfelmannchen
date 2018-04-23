@@ -177,11 +177,12 @@ data class DoppelKoordinatenSystem(
     fun verschiebeUmPixel(umBreite: Double, umHöhe: Double): DoppelKoordinatenSystem {
         val umKx = umBreite / scaleBreite
         val umKy = - umHöhe / scaleHöhe
-        return DoppelKoordinatenSystem(
+        return DoppelKoordinatenSystem(Bereich(
                 kxMin - umKx, kxMax - umKx,
-                kyMin - umKy, kyMax - umKy,
-                scaleBreite, scaleHöhe,
-                Vb, Vh
+                kyMin - umKy, kyMax - umKy
+                ),
+                this.breite,
+                this.höhe
         )
     }
 
