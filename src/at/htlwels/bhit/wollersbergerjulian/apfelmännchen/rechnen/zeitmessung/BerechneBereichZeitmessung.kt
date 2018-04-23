@@ -1,7 +1,7 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.zeitmessung
 
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.berechneSpalte
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.BerechnungMultithreaded
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import org.junit.jupiter.api.Test
 
@@ -29,8 +29,9 @@ class BerechneBereichZeitmessung {
      */
     @Test
     fun berechneSpalteZeitmessung() {
+        val multi = BerechnungMultithreaded()
         for (i in 1..10000) {
-            berechneSpalte(cr = -0.4860438957475998,
+            multi.berechneSpalte(cr = -0.4860438957475998,
                     ciMax = 0.2749190672153638,
                     aktuelleSpalte = 0,
                     zeilenzahl = 100,    // zusätzliche Schleife!

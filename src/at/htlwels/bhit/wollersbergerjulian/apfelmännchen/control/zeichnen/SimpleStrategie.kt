@@ -11,10 +11,10 @@ import javafx.scene.layout.Pane
  * Ohne jeden Schnickschnak. Ganz einfach ein
  * Image berechnen.
  */
-class SimpleStrategie(
+internal class SimpleStrategie(
         elternPane: Pane,
-        verwalter: ZeichenStrategienVerwalter
-) : ZeichenStrategie(elternPane, verwalter) {
+        val verwalter: ZeichenStrategienVerwalter
+) : ZeichenStrategie(elternPane) {
 
     /** Berechnet ein neues Bild im Fx Application Thread. */
     override fun aktualisiere() {

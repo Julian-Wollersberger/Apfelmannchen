@@ -15,10 +15,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Threads aufgeteilt und was schon berechnet ist
  * wird live vom BildAnimierer auf das writeableImage geschrieben.
  */
-class MultithreadedStrategie(
+internal class MultithreadedStrategie(
         elternPane: Pane,
-        verwalter: ZeichenStrategienVerwalter
-) : ZeichenStrategie(elternPane, verwalter) {
+        val verwalter: ZeichenStrategienVerwalter
+) : ZeichenStrategie(elternPane) {
 
     private var animierer: BildAnimierer? = null
     private val berechnungMultithreaded = BerechnungMultithreaded()
@@ -28,7 +28,6 @@ class MultithreadedStrategie(
             berechneAnimiert(verwalter.koordsys, verwalter.parameter)
         } catch (e: IllegalArgumentException) {
             // On startup size is 0. The Image doesn't like that.
-            //println("(Ignore on startup:) "+ e.localizedMessage)
         }
     }
 

@@ -82,7 +82,8 @@ class MouseInputHandler(
     }
 
 
-    /** Wenn der Benutzer die Maus niederdrückt. */
+    /** Wenn der Benutzer die Maus niederdrückt.
+     * fixme Es wird verzerrt! */
     private fun startePressDragRelease(event: MouseEvent) {
         dragStartEvent = event
     }

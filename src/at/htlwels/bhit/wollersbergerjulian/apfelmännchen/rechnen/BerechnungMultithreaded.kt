@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class BerechnungMultithreaded {
 
-    private val threadGroup = ThreadGroup("BildBerechnerGruppe")
-    public val queue = ConcurrentLinkedQueue<IntArray>()
+    private val threadQueue = ConcurrentLinkedQueue<Thread>()
+    val queue = ConcurrentLinkedQueue<IntArray>()
 
     fun teileAufThreadsAuf(
             anzahlThreads: Int,
@@ -18,16 +18,24 @@ class BerechnungMultithreaded {
     ) {
         // Berechnung auf Threads aufteilen
         for (i in 0..anzahlThreads - 1) {
-            Thread(threadGroup, Runnable {
+            val thread = Thread(Runnable {
                 berechneTeilBereich(
                         i, anzahlThreads,
                         koordsys, args, queue)
-            }).start()
+            })
+            thread.start()
+            threadQueue.add(thread)
         }
     }
 
     fun interrupt() {
-        threadGroup.interrupt()
+        threadQueue.forEach { it.interrupt() }
+        threadQueue.clear()
+    }
+
+    fun waitForAll() {
+        threadQueue.forEach { it.join() }
+        threadQueue.clear()
     }
 
     /**Hier werden außerdem nur alle n-ten Spalten
@@ -83,7 +91,7 @@ class BerechnungMultithreaded {
      * @return ein IntArray, mit den ArgbInt-Farbwerten.
      * Im ersten Element steht, für welche
      * Spalte im Bild es ist.*/
-    private fun berechneSpalte(
+    internal fun berechneSpalte(
             cr: Double, ciMax: Double, aktuelleSpalte: Int, zeilenzahl: Int, schrittI: Double,
             args: ApfelmännchenParameter
     ): IntArray {

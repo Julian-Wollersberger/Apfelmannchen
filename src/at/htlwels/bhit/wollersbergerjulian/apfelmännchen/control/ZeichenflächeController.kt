@@ -1,5 +1,6 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control
 
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.ZeichenStrategie
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen.ZeichenStrategienVerwalter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
@@ -86,8 +87,7 @@ class ZeichenflächeController(
         zeichenStackPane.setPrefSize(zeichenflächePrefWidth, zeichenflächePrefHeight)
 
         zeichenStrategieVerwalter = ZeichenStrategienVerwalter(this, zeichenAnchorPane)
-        //zeichenStrategieVerwalter.addSimpleStrategie()
-        zeichenStrategieVerwalter.addMultithreadedStrategie()
+        zeichenStrategieVerwalter.setMultithreadedStrategie()
 
         // Angezeigt werden soll das StackPane mit Inhalten.
         zeichenflächeRootPane = zeichenStackPane
@@ -116,9 +116,14 @@ class ZeichenflächeController(
      *
      * Vor langer Zeit (Nov 2017) war ein Screenshot eine Option. */
     fun speichereZeichenfläche() {
-        SpeichernZeichenRegion(this).berechneBildUndSpeichere()
-        // Vor langer Zeit (Nov 2017) war ein Screenshot eine Option.
+        // Kleines Lade-Dingsbums :)
+        setLadeDingsbums(Label("Bild wird berechnet..."))
 
+        val beides = ZeichenStrategienVerwalter(this, zeichenAnchorPane)
+        beides.setBildSpeichernStrategie(this)
+        beides.aktualisiere() // Speichern
+
+        setLadeDingsbums(null)
     }
 
     /** Zum registrieren von Events.

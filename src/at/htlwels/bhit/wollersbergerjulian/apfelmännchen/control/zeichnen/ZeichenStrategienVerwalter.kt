@@ -4,6 +4,7 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.Zeichenfläche
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import javafx.scene.layout.Pane
+import javafx.stage.Window
 
 
 // Created by julian on 19.12.17.
@@ -12,15 +13,14 @@ import javafx.scene.layout.Pane
  * genau das Bild verarbeitet/angezeigt wird)
  * und der Außenwelt.
  *
- * Es kann mehrere Strategien gleichzeitig geben. Dann
- * werden alle angesprochen.
+ * Strategie muss sofort festgesetzt werden!
  */
 class ZeichenStrategienVerwalter(
         private val controller: ZeichenflächeController,
         private val elternPane: Pane
 ) {
-    /** Das Löschen wird noch nicht gemacht. */
-    private val strategienListe = ArrayList<ZeichenStrategie>()
+    // Aufpassen, dass es nicht null ist, wenn es gebraucht wird!
+    private lateinit var strategie: ZeichenStrategie
 
     /** Die Zeichner sollen es nicht verändern können. */
     val koordsys: DoppelKoordinatenSystem
@@ -34,20 +34,22 @@ class ZeichenStrategienVerwalter(
 
     /** Berechnet die Bilder aller Strategien. */
     fun aktualisiere() {
-        strategienListe.forEach {
-            it.aktualisiere()
-        }
+        strategie.aktualisiere()
     }
 
     /****** Factory Methods für die Strategien. ******/
-    fun addSimpleStrategie() {
-        strategienListe.add(
-                SimpleStrategie(elternPane, this)
-        )
+    fun setSimpleStrategie() {
+        strategie = SimpleStrategie(elternPane, this)
     }
-    fun addMultithreadedStrategie() {
-        strategienListe.add(
-                MultithreadedStrategie(elternPane, this)
-        )
+    fun setMultithreadedStrategie() {
+        strategie = MultithreadedStrategie(elternPane, this)
+    }
+
+    /** Diese Strategie ist ziemlich anders und passt icht wirklich ins
+     * Schema. Sie sucht sich ihre Werte direkt vom Controller,
+     * was diese Klasse überflüssig macht.
+     * @see BildSpeichernStrategie */
+    fun setBildSpeichernStrategie(controller: ZeichenflächeController) {
+        strategie = BildSpeichernStrategie(elternPane, this, controller)
     }
 }

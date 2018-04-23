@@ -89,7 +89,7 @@ public class RootLayoutController implements Initializable {
         return menüLeiste;
     }
 
-    /** TODO Die prefSize erst dannach auf 0 setzen?
+    /**
      * Es gibt Dinge, die erst aufgerufen werden sollen, nachdem
      * primaryStage.show() aufgerufen wurde, weil dannach erst die
      * größen berechnet sind. */

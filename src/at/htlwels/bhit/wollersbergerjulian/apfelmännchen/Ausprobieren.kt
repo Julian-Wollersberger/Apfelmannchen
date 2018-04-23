@@ -17,7 +17,9 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.TimerTask
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 
@@ -60,6 +62,9 @@ fun main(args: Array<String>) {
     pis.read()
 
     ConcurrentLinkedQueue<String>()
+    Executors.newCachedThreadPool().awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS)
+
+
 
     // https@ //www.toptal.com/opengl/opengl-tutorial-for-android-building-a-mandelbrot-set-generator
     // https://github.com/skanti/Gaussian-Filter-GPU-OpenGL

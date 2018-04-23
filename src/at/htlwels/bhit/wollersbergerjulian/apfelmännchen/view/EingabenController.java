@@ -81,7 +81,7 @@ public class EingabenController implements Initializable {
         farbalgorithmusChoiceBox.getSelectionModel().select(StandardwerteEingabe.FARB_ALGORITHMUS);
 
 /*
-        //Schülerdaten in die Tabelle aufnehmen TODO
+        //Schülerdaten in die Tabelle aufnehmen
         vornameColumn.setCellValueFactory(cellData -> cellData.getValue().vornameProperty());
         nachnameColumn.setCellValueFactory(cellData -> cellData.getValue().nachnameProperty());
 
@@ -99,10 +99,10 @@ public class EingabenController implements Initializable {
         rootLayoutController.getZeichenflächeController().speichereZeichenfläche();
     }
 
-    //TODO Ansichten anzeigen
-    //TODO Ansichten speichern mit Datei-Dialog
-    //TODO Ansichten laden mit Datei-Dialog
-    //TODO Bild speichern: Option Ansicht speichern
+    //Ansichten anzeigen
+    //Ansichten speichern mit Datei-Dialog
+    //Ansichten laden mit Datei-Dialog
+    //Bild speichern: Option Ansicht speichern
 
     public void setRootLayoutController(RootLayoutController rootLayoutController) {
         this.rootLayoutController = rootLayoutController;

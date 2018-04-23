@@ -13,9 +13,8 @@ import javafx.scene.layout.Pane
  * Mit dem Unterschied, dass mehrere Strategien gleichzeitig sein können.
  * (z.B. speichern und anzeigen und Punkte anzeigen und vielleicht Screenshot?)
  */
-abstract class ZeichenStrategie(
-        elternPane: Pane,
-        val verwalter: ZeichenStrategienVerwalter
+internal abstract class ZeichenStrategie(
+        elternPane: Pane
 ) {
 
     /** gehört nur dieser Strategie. */
