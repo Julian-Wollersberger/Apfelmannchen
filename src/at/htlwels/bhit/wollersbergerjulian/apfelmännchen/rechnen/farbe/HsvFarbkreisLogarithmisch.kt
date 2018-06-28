@@ -3,12 +3,13 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe
 import javafx.scene.paint.Color
 import java.lang.Math.max
 import java.lang.Math.min
+import kotlin.math.sqrt
 
 // Created by julian on 22.12.17.
 /**
  * Siehe [berechneFarbe].
  */
-class HsvFarbkreisLogarithmisch: FarbAlgorithmus() {
+open class HsvFarbkreisLogarithmisch: FarbAlgorithmus() {
 
     /**Die Farbe wird berechnet mit dem HSV-Farbkreis.<br></br>
      * Der HSV-Farbkreis wird sozusagen
@@ -26,28 +27,21 @@ class HsvFarbkreisLogarithmisch: FarbAlgorithmus() {
      * @return Die Farbe als Int im argb-Format
      */
     override fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color, feinjustierung: Double): Int {
-
         /** Die Farbe als Int im argb-Format */
         val color: Int
-        val fraction: Double
 
         if (iterationen == maxIterationen)
             color = colorToArgbInt(grundfarbe)
         else {
-            // Zwischen 0 und 1 begrenzen
-            val feinj = min(1.0, max(0.0, feinjustierung))
-
-            // Feinjustierung:
-            // Zwischen dieser und der höheren Iteration
-            fraction = (1.0-feinj) * iterationToFraction(iterationen)
-                           + feinj * iterationToFraction(iterationen -1)
-
-            //println("${iterationToFraction(iterationen)} \t${iterationToFraction(iterationen -1)} \t$feinj")
-            //fraction = iterationToFraction(iterationen)
-
+            val fraction = calculateFraction(iterationen, feinjustierung)
             color = HsvHueToArgb(fraction)
         }
         return color
+    }
+
+    /** Wird vom Algorithmus mit Feinjustierung überschrieben. */
+    open fun calculateFraction(iterationen: Int, feinjustierung: Double): Double {
+        return iterationToFraction(iterationen)
     }
 
     fun iterationToFraction(iterationen: Int): Double {

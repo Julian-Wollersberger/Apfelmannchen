@@ -5,6 +5,7 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinate
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.IterationsWerte
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
 import java.util.*
+import kotlin.math.sqrt
 
 // Created by julian on 25.07.17.
 /**
@@ -160,7 +161,8 @@ fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): L
         i++
     }
 
-    println("Feinjustierung: "+ maxDistanz / (zr*zr + zi*zi))
+    val feinjustierung = maxDistanzQuad / (zr*zr + zi*zi)
+    println("Feinjustierung: "+ Math.min(1.0, Math.max(0.0, Math.log10(1.0+ 9*feinjustierung) )))
     return liste
 }
 

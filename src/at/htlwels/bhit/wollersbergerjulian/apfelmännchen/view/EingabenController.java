@@ -75,6 +75,7 @@ public class EingabenController implements Initializable {
 
         farbalgorithmusChoiceBox.getItems().addAll(
                 StandardwerteEingabe.FARB_ALGORITHMUS,
+                new HsvFarbkreisLogarithmisch(),
                 new HsvFarbkreisLinear(),
                 new SchwarzWeis()
         );

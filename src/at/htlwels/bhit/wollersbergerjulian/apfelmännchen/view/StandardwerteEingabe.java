@@ -4,6 +4,7 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenPa
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLogarithmisch;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFkLogGeglättet;
 import javafx.scene.paint.Color;
 
 // Created by julian on 02.07.17.
@@ -28,7 +29,7 @@ public class StandardwerteEingabe {
     public static final int MAX_ITERATIONEN = 1000;
     public static final double MAX_DISTANZ = 10;
     public static final Color GRUNDFARBE = Color.WHITE;
-    public static final FarbAlgorithmus FARB_ALGORITHMUS = new HsvFarbkreisLogarithmisch();
+    public static final FarbAlgorithmus FARB_ALGORITHMUS = new HsvFkLogGeglättet();
     public static final int ANZAHL_THREADS = 4;
 
     public static final double SPEICHERN_BREITE = 1920;
