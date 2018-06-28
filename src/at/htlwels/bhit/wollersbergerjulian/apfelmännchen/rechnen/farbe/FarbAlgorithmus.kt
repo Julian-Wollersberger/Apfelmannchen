@@ -12,9 +12,10 @@ abstract class FarbAlgorithmus {
      * @param maxIterationen Wenn die Iteration größergleich maxIterationen
      * ist, wird die Grundfarbe verwendet.
      * @param grundfarbe Die Farbe, die der Mittelteil des Apfelmännchens bekommt.
+     * @param feinjustierung Wert zwischen 0 und 1. Kann ignoriert werden. Dann 0.0 übergeben.
      * @return Die Farbe als Int im argb-Format
      */
-    abstract fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color): Int
+    abstract fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color, feinjustierung: Double): Int
 
 
 

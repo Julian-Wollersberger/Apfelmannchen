@@ -3,7 +3,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinatenSystem
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.IterationsWerte
-import javafx.scene.paint.Color
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
 import java.util.*
 
 // Created by julian on 25.07.17.
@@ -56,13 +56,14 @@ import java.util.*
  * @return Anzahl Iterationen, bis die Folge maxDistanz überschritten hat.
  * Daraus wird die Farbe errechnet. Geht von 0 bis maxIterationen (inklusiv).
  */
-fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int {
+fun istInMenge(cr: Double, ci: Double, args: ApfelmännchenParameter): Int {
+    val maxIter: Int = args.maxIterationen
     var zr = cr
     var zi = ci
     var zrtemp: Double
     // Distanz wird mit Pythagoras berechnet: dist² = zr² + zi²
     // Da Wurzel berechnen langsam ist, wird stattdessen der Vergleichswert quadriert.
-    val maxDistanzQuad = maxDistanz * maxDistanz
+    val maxDistanzQuad = args.maxDistanz * args.maxDistanz
 
     var i: Int = 0
     while (i < maxIter && zr*zr + zi*zi < maxDistanzQuad) {
@@ -72,7 +73,10 @@ fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int {
         i++
     }
 
-    return i
+    // Für die Berechnung der Farbe ist die Iterationenzahl zu wenig.
+    // Die derzeitige Sistanz ist nach der Schleife größer gleich maxDistanz. => Disivion ergibt <= 1
+    val feinjustierung: Double = maxDistanzQuad / (zr*zr + zi*zi);
+    return args.farbAlgorithmus.berechneFarbe(i, maxIter, args.grundfarbe, feinjustierung)
 }
 
 /*
@@ -121,8 +125,7 @@ fun berechneBereich(
         for (j in 0..(zeilenzahl-1)) {
             ci = koordsys.kyMax + schrittI * j
 
-            val iter = istInMenge(cr, ci, args.maxIterationen, args.maxDistanz)
-            val farbe = args.farbAlgorithmus.berechneFarbe(iter, args.maxIterationen, args.grundfarbe)
+            val farbe = istInMenge(cr, ci, args)
             zeichnePunkt(i, j, farbe)
 
             // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:
@@ -157,6 +160,7 @@ fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): L
         i++
     }
 
+    println("Feinjustierung: "+ maxDistanz / (zr*zr + zi*zi))
     return liste
 }
 
@@ -183,7 +187,7 @@ fun zeichneIterationenFürPunkt(
     for (werte in liste) {
         try {
             zeichnePunkt(koordsys.kxToBreite(werte.zr).toInt(), koordsys.kyToHöhe(werte.zi).toInt(),
-                    args.farbAlgorithmus.berechneFarbe(werte.iteration, args.maxIterationen, args.grundfarbe))
+                    args.farbAlgorithmus.berechneFarbe(werte.iteration, args.maxIterationen, args.grundfarbe, 0.0))
         } catch(e: IndexOutOfBoundsException) {
         }
     }

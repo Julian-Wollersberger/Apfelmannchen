@@ -1,6 +1,8 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.zeitmessung
 
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.istInMenge
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import org.junit.jupiter.api.Test
 
 // Created by julian on 04.12.17.
@@ -18,7 +20,7 @@ import org.junit.jupiter.api.Test
  * Es ist außerdem kein Unterschied zwischen
  * Schleife außen oder die in istInMenge drinn zu sein.
  */
-internal class IstInMengeZeitmessung {
+/*internal class IstInMengeZeitmessung {
     @Test
     fun bitteKompilierErstAllesSchön() {
         println(istInMenge(0.0, -0.4166666666666667, 1000, 10.0))
@@ -40,4 +42,4 @@ internal class IstInMengeZeitmessung {
         val erg = istInMenge(0.0, -0.4166666666666667, 1000000000, 10.0)
         println(erg)
     }
-}
+}*/

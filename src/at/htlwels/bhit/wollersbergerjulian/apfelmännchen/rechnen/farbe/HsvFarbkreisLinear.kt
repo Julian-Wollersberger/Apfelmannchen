@@ -13,7 +13,7 @@ import javafx.scene.paint.Color
  * bei hohem Zoom wird es nur noch Rauschen.
  */
 class HsvFarbkreisLinear : FarbAlgorithmus() {
-    override fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color): Int {
+    override fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color, feinjustierung: Double): Int {
         var color: Int
 
         if (iterationen == maxIterationen)

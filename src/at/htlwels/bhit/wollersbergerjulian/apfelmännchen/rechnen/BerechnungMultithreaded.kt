@@ -103,8 +103,7 @@ class BerechnungMultithreaded {
             // Kein += damit weniger Rundungsfehler
             ci = ciMax + schrittI * j
 
-            val iter = istInMenge(cr, ci, args.maxIterationen, args.maxDistanz)
-            val farbe = args.farbAlgorithmus.berechneFarbe(iter, args.maxIterationen, args.grundfarbe)
+            val farbe = istInMenge(cr, ci, args)
             punktFarben[j + 1] = farbe
 
             // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:

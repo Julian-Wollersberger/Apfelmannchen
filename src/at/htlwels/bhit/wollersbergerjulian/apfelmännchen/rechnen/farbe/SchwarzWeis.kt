@@ -8,7 +8,7 @@ import javafx.scene.paint.Color
  * Was innerhalb der Mandelbrotmenge ist, ist schwarz, alles andere weis.
  */
 class SchwarzWeis : FarbAlgorithmus() {
-    override fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color): Int {
+    override fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color, feinjustierung: Double): Int {
         if(iterationen == maxIterationen)
             return colorToArgbInt(0.0, 0.0, 0.0, 1.0)
         else

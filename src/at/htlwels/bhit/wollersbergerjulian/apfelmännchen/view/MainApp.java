@@ -15,7 +15,7 @@ import java.io.IOException;
  *
  * <h1>Algorithmus</h1>
  * https://de.wikipedia.org/wiki/Mandelbrot-Menge<br>
- * Erklärung: siehe {@link at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.BerechnungApfelmännchenKt#istInMenge(double, double, int, double) istInMenge()}
+ * Erklärung: siehe {@link at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.BerechnungApfelmännchenKt#istInMenge(double, double, at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter, double, at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus) istInMenge()}
  * <br><br>
  * z(0) = 0 <br>
  * z(n) = z(n+1)² + c <br>
