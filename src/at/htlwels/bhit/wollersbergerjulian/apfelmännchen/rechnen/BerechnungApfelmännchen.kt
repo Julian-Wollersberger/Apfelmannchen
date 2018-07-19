@@ -79,27 +79,6 @@ fun istInMenge(cr: Double, ci: Double, args: ApfelmännchenParameter): Int {
     return args.farbAlgorithmus.berechneFarbe(i, maxIter, args.grundfarbe, feinjustierung)
 }
 
-/** Dies ist der ältere Code.
- * fixme Duplikat.*/
-fun istInMengeAlt(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int {
-    var zr = cr
-    var zi = ci
-    var zrtemp: Double
-    // Distanz wird mit Pythagoras berechnet: dist² = zr² + zi²
-    // Da Wurzel berechnen langsam ist, wird stattdessen der Vergleichswert quadriert.
-    val maxDistanzQuad = maxDistanz * maxDistanz
-
-    var i: Int = 0
-    while (i < maxIter && zr*zr + zi*zi < maxDistanzQuad) {
-        zrtemp = zr * zr - zi * zi + cr
-        zi = 2.0 * zr * zi + ci
-        zr = zrtemp
-        i++
-    }
-
-    return i
-}
-
 
 /*
 * Dies ist die Formel für z³+c statt z²+c.
@@ -179,33 +158,4 @@ fun alleIterationen(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): L
     val feinjustierung = maxDistanzQuad / (zr*zr + zi*zi)
     println("Feinjustierung: "+ Math.min(1.0, Math.max(0.0, Math.log10(1.0+ 9*feinjustierung) )))
     return liste
-}
-
-/**
- * Zeichnet für den übergebenen Pixel-Punkt (px|py) alle Schritte
- * des Iterations-Algorithmus. Siehe [istInMenge]
- * Die Farbe wird mit dem entsprechenden Iterations-Schritt
- * und [berechneFarbe] ermittelt.
- *
- * Wenn ein Schritt auserhalb des Bildes ist, wird er
- * einfachnicht angezeigt.
- */
-fun zeichneIterationenFürPunkt(
-        px: Double, py: Double,
-        koordsys: DoppelKoordinatenSystem,
-        args: ApfelmännchenParameter,
-        zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit
-) {
-    // Zuerst alles berechnen
-    val liste = alleIterationen(koordsys.breiteToKX(px), koordsys.höheToKY(py),
-            args.maxIterationen, args.maxDistanz)
-
-    // Und dann alles zeichnen
-    for (werte in liste) {
-        try {
-            zeichnePunkt(koordsys.kxToBreite(werte.zr).toInt(), koordsys.kyToHöhe(werte.zi).toInt(),
-                    args.farbAlgorithmus.berechneFarbe(werte.iteration, args.maxIterationen, args.grundfarbe, 0.0))
-        } catch(e: IndexOutOfBoundsException) {
-        }
-    }
 }
