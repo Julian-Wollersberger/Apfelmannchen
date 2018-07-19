@@ -44,6 +44,9 @@ class ZeichenStrategienVerwalter(
     fun setMultithreadedStrategie() {
         strategie = MultithreadedStrategie(elternPane, this)
     }
+    fun setGpuStrategie() {
+        strategie = GpuStrategie(elternPane, this)
+    }
 
     /** Diese Strategie ist ziemlich anders und passt icht wirklich ins
      * Schema. Sie sucht sich ihre Werte direkt vom Controller,

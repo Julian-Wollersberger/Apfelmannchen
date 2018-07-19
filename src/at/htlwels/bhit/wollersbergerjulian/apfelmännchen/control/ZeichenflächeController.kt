@@ -88,6 +88,7 @@ class ZeichenflächeController(
 
         zeichenStrategieVerwalter = ZeichenStrategienVerwalter(this, zeichenAnchorPane)
         zeichenStrategieVerwalter.setMultithreadedStrategie()
+        //zeichenStrategieVerwalter.setGpuStrategie()
 
         // Angezeigt werden soll das StackPane mit Inhalten.
         zeichenflächeRootPane = zeichenStackPane

@@ -10,7 +10,14 @@ class HsvFkLogGeglättet: HsvFarbkreisLogarithmisch() {
     override fun calculateFraction(iterationen: Int, feinjustierung: Double): Double {
         // Zwischen 0 und 1 begrenzen
         // Die Werte der Feinabsimmung sind ebenfalls logarithmisch verteilt.
+        /* log(1) = 0
+         * log(10) = 1 */
         val feinj: Double = Math.min(1.0, Math.max(0.0, Math.log10(1.0+ 9*feinjustierung) ))
+
+        // Nop. Noch schlechter.
+        //val feinj: Double = Math.min(1.0, Math.max(0.0, 1.0+Math.log10(0.1+ 0.9*feinjustierung) ))
+        //val feinj: Double = Math.min(1.0, Math.max(0.0, Math.sqrt(Math.log10(1.0+ 9*feinjustierung)) ))
+        //val feinj: Double = Math.min(1.0, Math.max(0.0, Math.log10(1.0+ 9*Math.log10(1.0+ 9*feinjustierung)) ))
 
         /* Feinjustierung:
          * Zwischen dieser und der höheren Iteration

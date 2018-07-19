@@ -5,7 +5,6 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.DoppelKoordinate
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.IterationsWerte
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
 import java.util.*
-import kotlin.math.sqrt
 
 // Created by julian on 25.07.17.
 /**
@@ -80,6 +79,28 @@ fun istInMenge(cr: Double, ci: Double, args: ApfelmännchenParameter): Int {
     return args.farbAlgorithmus.berechneFarbe(i, maxIter, args.grundfarbe, feinjustierung)
 }
 
+/** Dies ist der ältere Code.
+ * fixme Duplikat.*/
+fun istInMengeAlt(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Int {
+    var zr = cr
+    var zi = ci
+    var zrtemp: Double
+    // Distanz wird mit Pythagoras berechnet: dist² = zr² + zi²
+    // Da Wurzel berechnen langsam ist, wird stattdessen der Vergleichswert quadriert.
+    val maxDistanzQuad = maxDistanz * maxDistanz
+
+    var i: Int = 0
+    while (i < maxIter && zr*zr + zi*zi < maxDistanzQuad) {
+        zrtemp = zr * zr - zi * zi + cr
+        zi = 2.0 * zr * zi + ci
+        zr = zrtemp
+        i++
+    }
+
+    return i
+}
+
+
 /*
 * Dies ist die Formel für z³+c statt z²+c.
 * Erzeugt ein anderes schönes Muster.
@@ -103,14 +124,13 @@ zr = zrtemp;
  *
  * @param koordsys Dessen Bereich  wird gezeichnet
  * und dessen Breite und Höhe sind die Dimensionen des Bildes.
- * @param args Fasst maxIterationen, maxDistanz und grundfarbe zusammen.
- * @param zeichnePunkt Mit dieser Funktion wird jeder Punkt gezeichnet.
+ * @param doSomething Diese Funktion wird aufgerufen. Die
+ * Parameter sind die Pixel-Koordinaten und die komplexen Koordinaten
+ * für diesen Punkt.
  */
-@Deprecated("Replace with BereichBerechnung")
-fun berechneBereich(
+fun fürJedenPunkt(
         koordsys: DoppelKoordinatenSystem,
-        args: ApfelmännchenParameter,
-        zeichnePunkt: (x: Int, y: Int, argb: Int) -> Unit
+        doSomething: (x: Int, y: Int, cr: Double, ci: Double) -> Unit
 ) {
     var cr = koordsys.kxMin
     var ci = koordsys.kyMax
@@ -126,12 +146,7 @@ fun berechneBereich(
         for (j in 0..(zeilenzahl-1)) {
             ci = koordsys.kyMax + schrittI * j
 
-            val farbe = istInMenge(cr, ci, args)
-            zeichnePunkt(i, j, farbe)
-
-            // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:
-            /*if(Math.abs(cr) <0.003 || Math.abs(ci) <0.003)
-                arg.zeichnePunkt(i, j, colorToArgbInt(Color.BLACK))*/
+            doSomething(i, j, cr, ci)
         }
     }
 }

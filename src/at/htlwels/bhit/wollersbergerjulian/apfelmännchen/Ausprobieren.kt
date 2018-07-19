@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import java.util.stream.IntStream
 import javax.imageio.ImageIO
 
 
@@ -64,7 +65,13 @@ fun main(args: Array<String>) {
     ConcurrentLinkedQueue<String>()
     Executors.newCachedThreadPool().awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS)
 
-
+    // http://on-demand.gputechconf.com/gtc/2016/presentation/s6346-kazuaki-ishizaki-gpu-programming-java-programmers.pdf
+    val size = 50
+    val erg = IntArray(size)
+    val daten = IntArray(size, {it})
+    IntStream.range(0,size).parallel().forEach {
+        erg[it] = daten[it] * 2
+    }
 
     // https@ //www.toptal.com/opengl/opengl-tutorial-for-android-building-a-mandelbrot-set-generator
     // https://github.com/skanti/Gaussian-Filter-GPU-OpenGL

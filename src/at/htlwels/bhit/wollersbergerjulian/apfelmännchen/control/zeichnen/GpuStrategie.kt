@@ -1,33 +1,28 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control.zeichnen
 
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.fürJedenPunkt
-import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.istInMenge
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.GpuBeschleuniger
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.layout.Pane
 
 
-// Created by julian on 20.12.17.
+// Created by julian on 08.07.18.
 /**
- * Ohne jeden Schnickschnak. Ganz einfach ein
- * Image berechnen.
+ * TODO Description
  */
-internal class SimpleStrategie(
+internal class GpuStrategie(
         elternPane: Pane,
         val verwalter: ZeichenStrategienVerwalter
 ) : ZeichenStrategie(elternPane) {
 
-    /** Berechnet ein neues Bild im Fx Application Thread. */
+    val beschleuniger = GpuBeschleuniger()
+
     override fun aktualisiere() {
         try {
             val koordsys = verwalter.koordsys
             val writableImage = WritableImage(koordsys.breite.toInt(), koordsys.höhe.toInt())
 
-            fürJedenPunkt(koordsys, { x, y, cr, ci ->
-                // Berechne die Farbe.
-                val farbe = istInMenge(cr, ci, verwalter.parameter)
-                writableImage.pixelWriter.setArgb(x, y, farbe)
-            })
+            beschleuniger.berechneBild(koordsys, verwalter.parameter, writableImage.pixelWriter::setArgb)
 
             super.zeichenPane.children.clear()
             super.zeichenPane.children.add(ImageView(writableImage))
@@ -36,6 +31,5 @@ internal class SimpleStrategie(
             // Beim Initialisieren tritt dieser Fehler auf:
             // Image dimensions must be positive (w,h > 0)
         }
-
     }
 }
