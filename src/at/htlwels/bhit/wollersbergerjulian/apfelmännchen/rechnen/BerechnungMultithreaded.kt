@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class BerechnungMultithreaded {
 
     private val threadQueue = ConcurrentLinkedQueue<Thread>()
+    /** Arrays der berechneten Farbwerte einer Spalte. */
     val queue = ConcurrentLinkedQueue<IntArray>()
 
     fun teileAufThreadsAuf(
@@ -69,18 +70,16 @@ class BerechnungMultithreaded {
             queue: ConcurrentLinkedQueue<IntArray>
     ) {
         var cr = koordsys.kxMin
-        val spaltenzahl = koordsys.breite.toInt() - 1
-        val zeilenzahl = koordsys.höhe.toInt() - 1
-        val schrittR: Double = (koordsys.kxMax - koordsys.kxMin) / spaltenzahl
-        val schrittI: Double = -(koordsys.kyMax - koordsys.kyMin) / zeilenzahl
+        val spaltenzahl = koordsys.spaltenzahl - 1 //TODO ist dieses -1 nötig?
+        val zeilenzahl = koordsys.zeilenzahl - 1
 
         var i = offset
         while (i < spaltenzahl && !Thread.currentThread().isInterrupted) {
             // Kein += damit weniger Rundungsfehler
-            cr = koordsys.kxMin + schrittR * i
+            cr = koordsys.kxMin + koordsys.schrittR * i
 
             // Jede Spalte zur Queue hinzufügen.
-            val arrr = berechneSpalte(cr, koordsys.kyMax, i, zeilenzahl, schrittI, args)
+            val arrr = berechneSpalte(cr, koordsys.kyMax, i, zeilenzahl, koordsys.schrittI, args)
             queue.add(arrr)
 
             i += jedeWievielteSpalte
@@ -103,7 +102,8 @@ class BerechnungMultithreaded {
             // Kein += damit weniger Rundungsfehler
             ci = ciMax + schrittI * j
 
-            val farbe = istInMenge(cr, ci, args)
+            val iterationen = args.figur.istInMenge(cr, ci, args.maxIterationen, args.maxDistanz)
+            val farbe = args.farbAlgorithmus.berechneFarbe(iterationen, args.maxIterationen, args.grundfarbe)
             punktFarben[j + 1] = farbe
 
             // Debug: Beim Koordinatensystem rudimentäre Achsen zeichnen:

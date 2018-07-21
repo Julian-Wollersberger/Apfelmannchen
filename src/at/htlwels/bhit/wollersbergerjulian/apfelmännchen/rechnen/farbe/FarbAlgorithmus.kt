@@ -1,6 +1,7 @@
 package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe
 
 import javafx.scene.paint.Color
+import kotlin.math.max
 
 // Created by julian on 22.12.17.
 /**
@@ -17,7 +18,20 @@ abstract class FarbAlgorithmus {
      */
     abstract fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color, feinjustierung: Double): Int
 
+    /** Format-Konvertierung.
+     * @param iterationen als Double ist (int)iterationen + (double 0..1)feinjustierung.
+     * Diese kombinierten Werte werden hier wieder aufgetrennt.*/
+    fun berechneFarbe(iterationen: Double, maxIterationen: Int, grundfarbe: Color): Int {
+        var iter: Int = Math.floor(iterationen).toInt()
+        if(iter > maxIterationen) iter = maxIterationen
 
+        var feinjustierung = iterationen - iter
+        // Begrenzen zwischen 0 und 0.9999999
+        if(feinjustierung < 0.0) feinjustierung = 0.0
+        if(feinjustierung >= 1.0) feinjustierung = 1.0-Math.ulp(1.0) //=0.9999999999...
+
+        return berechneFarbe(iter, maxIterationen, grundfarbe, feinjustierung)
+    }
 
     //-------------- Konvertierung --------------
 

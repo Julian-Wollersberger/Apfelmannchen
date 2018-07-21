@@ -3,6 +3,8 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.control
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.ApfelmännchenParameter
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.ApfelmännchenFigur
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.BirnenmännchenFigur
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import javafx.scene.paint.Color
@@ -25,7 +27,8 @@ class EingabenSchnittstelle(
                 maxIterationen,
                 maxDistanz,
                 grundfarbe,
-                farbAlgorithmus)
+                farbAlgorithmus,
+                BirnenmännchenFigur()) //TODO Nicht hardcodiert
         set(value) {
             maxIterationen = value.maxIterationen
             maxDistanz = value.maxDistanz

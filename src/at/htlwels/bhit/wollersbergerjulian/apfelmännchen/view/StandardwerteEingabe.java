@@ -5,6 +5,8 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLogarithmisch;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFkLogGeglättet;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.ApfelmännchenFigur;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.Figur;
 import javafx.scene.paint.Color;
 
 // Created by julian on 02.07.17.
@@ -30,6 +32,7 @@ public class StandardwerteEingabe {
     public static final double MAX_DISTANZ = 10;
     public static final Color GRUNDFARBE = Color.WHITE;
     public static final FarbAlgorithmus FARB_ALGORITHMUS = new HsvFkLogGeglättet();
+    public static final Figur FIGUR = new ApfelmännchenFigur();
     public static final int ANZAHL_THREADS = 4;
 
     public static final double SPEICHERN_BREITE = 1920;
@@ -43,6 +46,6 @@ public class StandardwerteEingabe {
 
     /** Zum testen. */
     public static ApfelmännchenParameter parameter() {
-        return new ApfelmännchenParameter(MAX_ITERATIONEN, MAX_DISTANZ, GRUNDFARBE, FARB_ALGORITHMUS);
+        return new ApfelmännchenParameter(MAX_ITERATIONEN, MAX_DISTANZ, GRUNDFARBE, FARB_ALGORITHMUS, FIGUR);
     }
 }

@@ -82,6 +82,13 @@ data class DoppelKoordinatenSystem(
     val kxSpanne get() = (kxMax - kxMin)
     val kySpanne get() = (kyMax - kyMin)
 
+    /** Schrittweite zwischen zwei Punkten */
+    val schrittR: Double = (kxMax - kxMin) / breite.toInt()
+    val schrittI: Double = -(kyMax - kyMin) / höhe.toInt()
+
+    val spaltenzahl = breite.toInt()
+    val zeilenzahl = höhe.toInt()
+
     /** Konstruktor mit kartesischem Bereich, breite und höhe.
      * scale und V werden daraus ausgerechnet. */
     constructor(kBereich: Bereich, breite: Double, höhe: Double) 

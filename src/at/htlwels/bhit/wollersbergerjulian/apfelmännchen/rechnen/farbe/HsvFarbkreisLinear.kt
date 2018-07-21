@@ -14,7 +14,7 @@ import javafx.scene.paint.Color
  */
 class HsvFarbkreisLinear : FarbAlgorithmus() {
     override fun berechneFarbe(iterationen: Int, maxIterationen: Int, grundfarbe: Color, feinjustierung: Double): Int {
-        var color: Int
+        val color: Int
 
         if (iterationen == maxIterationen)
             color = colorToArgbInt(grundfarbe)
