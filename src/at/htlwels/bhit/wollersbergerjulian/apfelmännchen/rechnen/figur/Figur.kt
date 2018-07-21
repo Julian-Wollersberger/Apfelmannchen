@@ -14,6 +14,9 @@ abstract class Figur {
     /** @see ApfelmännchenFigur.istInMenge */
     abstract fun istInMenge(cr: Double, ci: Double, maxIter: Int, maxDistanz: Double): Double
 
+    /** Der Text, der im GUI in der ChoiceBox angezeigt werden soll. */
+    override abstract fun toString(): String
+
     companion object {
         /**Berechnet jeden Punkt im Bereich des koordsys die übergebene Funktion.
          *

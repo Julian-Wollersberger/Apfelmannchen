@@ -70,16 +70,13 @@ class BerechnungMultithreaded {
             queue: ConcurrentLinkedQueue<IntArray>
     ) {
         var cr = koordsys.kxMin
-        val spaltenzahl = koordsys.spaltenzahl - 1 //TODO ist dieses -1 nötig?
-        val zeilenzahl = koordsys.zeilenzahl - 1
-
         var i = offset
-        while (i < spaltenzahl && !Thread.currentThread().isInterrupted) {
+        while (i < koordsys.spaltenzahl && !Thread.currentThread().isInterrupted) {
             // Kein += damit weniger Rundungsfehler
             cr = koordsys.kxMin + koordsys.schrittR * i
 
             // Jede Spalte zur Queue hinzufügen.
-            val arrr = berechneSpalte(cr, koordsys.kyMax, i, zeilenzahl, koordsys.schrittI, args)
+            val arrr = berechneSpalte(cr, koordsys.kyMax, i, koordsys.zeilenzahl, koordsys.schrittI, args)
             queue.add(arrr)
 
             i += jedeWievielteSpalte

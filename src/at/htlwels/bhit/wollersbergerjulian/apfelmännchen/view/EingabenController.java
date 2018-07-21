@@ -6,6 +6,8 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgo
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLinear;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.HsvFarbkreisLogarithmisch;
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.SchwarzWeis;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.BirnenmännchenFigur;
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.Figur;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,6 +47,7 @@ public class EingabenController implements Initializable {
     private ParsingTextField distanzEingabe = new ParsingTextField<>(StandardwerteEingabe.MAX_DISTANZ);
     private ParsingTextField threadsEingabe = new ParsingTextField<>(StandardwerteEingabe.ANZAHL_THREADS);
     @FXML private ChoiceBox<FarbAlgorithmus> farbalgorithmusChoiceBox;
+    @FXML private ChoiceBox<Figur> figurChoiceBox;
 
     private ParsingTextField breiteEingabe = new ParsingTextField<>(StandardwerteEingabe.SPEICHERN_BREITE);
     private ParsingTextField höheEingabe = new ParsingTextField<>(StandardwerteEingabe.SPEICHERN_HÖHE);
@@ -81,16 +84,11 @@ public class EingabenController implements Initializable {
         );
         farbalgorithmusChoiceBox.getSelectionModel().select(StandardwerteEingabe.FARB_ALGORITHMUS);
 
-/*
-        //Schülerdaten in die Tabelle aufnehmen
-        vornameColumn.setCellValueFactory(cellData -> cellData.getValue().vornameProperty());
-        nachnameColumn.setCellValueFactory(cellData -> cellData.getValue().nachnameProperty());
-
-        // leer initialisieren
-        showSchülerDetails(null);
-        // ereignisbehandlung
-        schülerTabableView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showSchülerDetails(newValue));*/
+        figurChoiceBox.getItems().addAll(
+                StandardwerteEingabe.FIGUR,
+                new BirnenmännchenFigur()
+        );
+        figurChoiceBox.getSelectionModel().select(StandardwerteEingabe.FIGUR);
     }
 
     /** Speichert ein Bild der Zeichenfläche
@@ -170,10 +168,17 @@ public class EingabenController implements Initializable {
     }
     public FarbAlgorithmus leseFarbAlgorithmus() {
         FarbAlgorithmus algorithmus = farbalgorithmusChoiceBox.getSelectionModel().getSelectedItem();
-        if(algorithmus != null)
-            return algorithmus;
-        else
-            return StandardwerteEingabe.FARB_ALGORITHMUS;
+        if(algorithmus != null) return algorithmus;
+        else return StandardwerteEingabe.FARB_ALGORITHMUS;
+    }
+
+    public void setzeFigur(Figur figur) {
+        figurChoiceBox.getSelectionModel().select(figur);
+    }
+    public Figur leseFigur() {
+        Figur figur = figurChoiceBox.getSelectionModel().getSelectedItem();
+        if(figur != null) return figur;
+        else return StandardwerteEingabe.FIGUR;
     }
 
     public void setzeBreiteText(double breite) {

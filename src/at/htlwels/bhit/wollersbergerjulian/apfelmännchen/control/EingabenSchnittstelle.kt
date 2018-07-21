@@ -5,6 +5,7 @@ import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.model.Bereich
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.farbe.FarbAlgorithmus
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.ApfelmännchenFigur
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.BirnenmännchenFigur
+import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur.Figur
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.EingabenController
 import at.htlwels.bhit.wollersbergerjulian.apfelmännchen.view.StandardwerteEingabe
 import javafx.scene.paint.Color
@@ -28,11 +29,13 @@ class EingabenSchnittstelle(
                 maxDistanz,
                 grundfarbe,
                 farbAlgorithmus,
-                BirnenmännchenFigur()) //TODO Nicht hardcodiert
+                figur)
         set(value) {
             maxIterationen = value.maxIterationen
             maxDistanz = value.maxDistanz
             grundfarbe = value.grundfarbe
+            farbAlgorithmus = value.farbAlgorithmus
+            figur = value.figur
         }
 
     var maxIterationen: Int
@@ -51,6 +54,10 @@ class EingabenSchnittstelle(
     var farbAlgorithmus: FarbAlgorithmus
         get() = eingabenController.leseFarbAlgorithmus()
         set(value) = eingabenController.setzeFarbAlgorithmus(value)
+
+    var figur: Figur
+        get() = eingabenController.leseFigur()
+        set(value) = eingabenController.setzeFigur(value)
 
     var anzahlThreads: Int
         get() = eingabenController.leseAnzahlThreads()

@@ -66,4 +66,8 @@ class ApfelmännchenFigur: Figur() {
 
         return i + feinjustierung
     }
+
+    override fun toString(): String {
+        return "Apfelmännchen"
+    }
 }
