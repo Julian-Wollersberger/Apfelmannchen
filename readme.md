@@ -6,7 +6,7 @@ in Kotlin und Java.
 
 Diesen wunderschöne Farbalgorithmus ist eine Eigenentwicklung ^^ 
 
-![Apfelmännchen Screenshot](Screenshots/Apfelmännchen In der Spitze der Spitze.png)
+![Apfelmännchen Screenshot](Screenshots/Apfelmännchen_In_der_Spitze_der_Spitze.png)
 
 Man kann mit dem Mausrad zoomen, verschieben
 und Screenshots erstellen.
