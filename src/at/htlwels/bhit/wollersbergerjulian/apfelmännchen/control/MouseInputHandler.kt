@@ -54,6 +54,12 @@ class MouseInputHandler(
     private var dragStartEvent: MouseEvent? = null
 
 
+    private fun zoomeBeimScrollen(event: ScrollEvent) {
+        val zoomFaktor = 1 - event.deltaY / 120
+        zoome(zoomFaktor, event.x, event.y)
+        event.consume()
+    }
+
     /**Beim Zoomen soll der kartesische Punkt, über dem die Maus ist,
      * vorher und nachher gleich bleiben.
      *
@@ -63,14 +69,12 @@ class MouseInputHandler(
      * verändert; sie repräsentieren die neue Ansicht.
      * Das berechnete Bild passt nicht mehr dazu.
      */
-    private fun zoomeBeimScrollen(event: ScrollEvent) {
-        val zoomFaktor = 1 - event.deltaY / 120
-
-        val neuesKoordsys = koordsys.erzeugeKartesischenAusschnitt(zoomFaktor, event.x, event.y)
-        if (neuesKoordsys.kxSpanne != Double.NaN
-                && neuesKoordsys.kySpanne != Double.NaN
-                && neuesKoordsys.breite != Double.NaN
-                && neuesKoordsys.höhe != Double.NaN
+    private fun zoome(zoomFaktor: Double, x: Double, y: Double) {
+        val neuesKoordsys = koordsys.erzeugeKartesischenAusschnitt(zoomFaktor, x, y)
+        if (!neuesKoordsys.kxSpanne.isNaN()
+                && !neuesKoordsys.kySpanne.isNaN()
+                && !neuesKoordsys.breite.isNaN()
+                && !neuesKoordsys.höhe.isNaN()
                 ) {
             koordsys = neuesKoordsys
         } else
@@ -78,7 +82,6 @@ class MouseInputHandler(
                     "Alt=$koordsys \nNeu=$neuesKoordsys")
 
         controller.berechneBild()
-        event.consume()
     }
 
 

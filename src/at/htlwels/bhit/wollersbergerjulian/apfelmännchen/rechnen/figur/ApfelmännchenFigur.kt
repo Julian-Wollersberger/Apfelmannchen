@@ -62,7 +62,7 @@ class ApfelmännchenFigur: Figur() {
          * --> Disivion ergibt Wert <= 1 */
         var feinjustierung: Double = maxDistanzQuad / (zr*zr + zi*zi)
         // Begrenzen zwischen 0 und 0.9999
-        feinjustierung = Math.max(Math.min(feinjustierung, 0.9999), 0.0)
+        feinjustierung = Math.max(Math.min(feinjustierung, 0.999999999), 0.0)
 
         return i + feinjustierung
     }

@@ -3,6 +3,7 @@ package at.htlwels.bhit.wollersbergerjulian.apfelmännchen.rechnen.figur
 
 // Created by julian on 21.07.18.
 /**
+ * TODO Ich würde gerne noch ein allgemeines z^n+c machen.
  * @see istInMenge
  */
 class BirnenmännchenFigur: Figur() {
@@ -31,7 +32,7 @@ class BirnenmännchenFigur: Figur() {
         }
 
         var feinjustierung: Double = maxDistanzQuad / (zr*zr + zi*zi)
-        feinjustierung = Math.max(Math.min(feinjustierung, 0.9999), 0.0)
+        feinjustierung = Math.max(Math.min(feinjustierung, 0.999999999), 0.0)
 
         return i + feinjustierung
     }

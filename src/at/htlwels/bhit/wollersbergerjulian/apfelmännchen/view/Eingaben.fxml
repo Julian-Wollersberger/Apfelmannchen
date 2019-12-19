@@ -96,7 +96,7 @@
                </children></AnchorPane>
       </content>
     </TitledPane>
-      <TitledPane disable="true" expanded="false" text="Ansichten" visible="false">
+      <TitledPane disable="true" expanded="false" text="Ansichten">
          <content>
             <AnchorPane>
                <children>
