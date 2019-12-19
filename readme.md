@@ -19,4 +19,5 @@ auch mit `z³+c` rechnen lassen.
 
 ![Birnenmännchen Spiralen](Screenshots/Spinner.png)
 
-
+Für eine Apfelmännchen-Version, die wesentlich schneller rendert durch GPU-Unterstützung, 
+siehe ein Rust-Projekt von mir, [mandelbrot-gpu-glium](https://github.com/Julian-Wollersberger/mandelbrot-gpu-glium)
